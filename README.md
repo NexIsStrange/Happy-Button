@@ -1,5 +1,6 @@
 # Happy-Button
 <h1>A game made with customtkinter</h1>
-![Happy Button Gameplay](https://user-images.githubusercontent.com/78687256/230709568-06c9d071-2df4-45a4-b9d2-759d92591669.gif)
+<img src="https://media.giphy.com/media/vFKqnCdLPNOKc/giphy.gif](https://user-images.githubusercontent.com/78687256/230709646-714222ec-6a75-4092-9b15-e68e32c72827.gif" width="40" height="40" />
 
-s a game made with customtkinter</p>
+
+<p>Hapyy button is a game made with customtkinter</p>
