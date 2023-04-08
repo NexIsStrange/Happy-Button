@@ -26,16 +26,27 @@ scaling = False
 
 
 def main():
+    def create_save():
+        if os.path.isfile("save.json"):
+            return False
+        else:
+            with open("save.json","w") as f:
+                f.write('{\n    "score": 0\n}')
+    create_save()
     global scaling
     global sound
-    def check_value(setting,default):
+    global theme
+    def check_value(setting,default,special=None):
         with open("save.json","r") as f:
             settings = json.load(f)
             a = settings.get("settings",{}).get(setting,default)
         return a
+    with open("save.json","r") as f:
+        settings = json.load(f)
+    theme = settings.get("settings",{}).get("theme","default").lower()
+
     scaling = check_value(setting="scaling",default=False)
     sound = check_value(setting="sound",default=True)
-    
     window = ctk.CTk()
     window.geometry("500x250")
     window.title("Happy Button")
@@ -43,12 +54,7 @@ def main():
     frame = ctk.CTkFrame(window,width=450,height=200)
     frame.place(relx=0.5,rely=0.5,anchor=ctk.CENTER)        
         
-    def create_save():
-        if os.path.isfile("save.json"):
-            return False
-        else:
-            with open("save.json","w") as f:
-                f.write('{\n    "score": 0\n}')
+
     def get_save():
         create_save()
         with open("save.json","r") as f:
@@ -64,7 +70,15 @@ def main():
             save["score"] = score
             with open("save.json","w") as f:
                 json.dump(save,f)
-
+                
+    def create_settings():
+        with open("save.json","r") as f:
+            settings = json.load(f)
+        settings_ = settings.get("settings",None)
+        if settings_ == None:
+            settings["settings"] = {}
+        with open("save.json","w") as f:
+            json.dump(settings,f)
     def change_setting(setting,mode):
         with open("save.json","r") as f:
             settings = json.load(f)
@@ -74,6 +88,8 @@ def main():
             global scaling
             scaling = mode
         settings["settings"][setting] = mode
+        if "custom_theme" not in settings["settings"]:
+            settings["settings"]["custom_theme"] = {}
         with open("save.json","w") as f:
             json.dump(settings,f)
             
@@ -178,16 +194,47 @@ def main():
                 playsound(wrong_loc,False)
             start_time -= 1
             return
+    def get_theme(color):
+        if theme == "green":
+            return "#61B62F"
+        if theme == "default":
+            return "#ffffff"
+        if theme == "custom":
+            with open("save.json","r") as f:
+                settings = json.load(f)
+            a = settings ["settings"]["custom_theme"]["button_color"]
+            return a
     def restore():
-        button1.configure(fg_color="#1c1c1c",hover_color="#1c1c1c")
-        time.sleep(0.01)
-        button2.configure(fg_color="#1c1c1c",hover_color="#1c1c1c")
-        time.sleep(0.01)
-        button3.configure(fg_color="#1c1c1c",hover_color="#1c1c1c")
-        time.sleep(0.01)
-        button4.configure(fg_color="#1c1c1c",hover_color="#1c1c1c")
-        time.sleep(0.01)
-        
+        if theme == "default":
+            button1.configure(fg_color="#1c1c1c",hover_color="#1c1c1c")
+            button2.configure(fg_color="#1c1c1c",hover_color="#1c1c1c")
+            button3.configure(fg_color="#1c1c1c",hover_color="#1c1c1c")
+            button4.configure(fg_color="#1c1c1c",hover_color="#1c1c1c")
+        elif theme == "green":
+            button1.configure(fg_color="#254B0F",hover_color="#254B0F")
+            button2.configure(fg_color="#254B0F",hover_color="#254B0F")
+            button3.configure(fg_color="#254B0F",hover_color="#254B0F")
+            button4.configure(fg_color="#254B0F",hover_color="#254B0F")
+            frame.configure(fg_color="#142C06")
+            window.configure(fg_color="#0E1F04")
+            start.configure(fg_color="#4BA516")
+            settings_.configure(fg_color="#4BA516")
+        elif theme == "custom":
+            with open("save.json","r") as f:
+                settings = json.load(f)
+            
+            a = settings["settings"]["custom_theme"]["hover"]
+            b = settings["settings"]["custom_theme"]["frame_bg"]
+            c = settings["settings"]["custom_theme"]["main_bg"]
+            d = settings["settings"]["custom_theme"]["button_color"]
+            button1.configure(fg_color=a,hover_color=a)
+            button2.configure(fg_color=a,hover_color=a)
+            button3.configure(fg_color=a,hover_color=a)
+            button4.configure(fg_color=a,hover_color=a)
+            frame.configure(fg_color=b)
+            window.configure(fg_color=c)
+            start.configure(fg_color=d,hover_color=a)
+            settings_.configure(fg_color=d,hover_color=a)
     def random_button():
         global c_button
         buttonnum = random.choice(["red","yellow","blue","green"])
@@ -196,13 +243,14 @@ def main():
             return
         restore()
         if buttonnum == "red":
-            button1.configure(fg_color="#FFFFFF",hover_color="#FFFFFF")
+            button1.configure(fg_color=get_theme(color="red"),hover_color=get_theme(color="red"))
         elif buttonnum == "yellow":
-            button2.configure(fg_color="#FFFFFF",hover_color="#FFFFFF")
+            button2.configure(fg_color=get_theme(color="yellow"),hover_color=get_theme(color="yellow"))
         elif buttonnum == "blue":
-            button3.configure(fg_color="#FFFFFF",hover_color="#FFFFFF")
+            button3.configure(fg_color=get_theme(color="blue"),hover_color=get_theme(color="blue"))
         elif buttonnum == "green":
-            button4.configure(fg_color="#FFFFFF",hover_color="#FFFFFF")
+            button4.configure(fg_color=get_theme(color="green"),hover_color=get_theme(color="green"))
+            
         else:
             print(buttonnum)
         c_button = buttonnum
@@ -223,7 +271,6 @@ def main():
                     f_w = __width__-50
                     f_h = __height__-50
                     rad = round(__x__ *0.5)
-                    print(button_font)
                     start.configure(width=(__width__-50)*0.2,height=(__height__-50)*0.05,font=("Helvetica",button_font))
                     button1.configure(width=__x__,height=__x__,corner_radius=rad)
                     button2.configure(width=__x__,height=__x__,corner_radius=rad)
@@ -238,6 +285,7 @@ def main():
                     frame.configure(width=__width__-50,height=__height__-50)   
                     
     def setting():
+        create_settings()
         window.destroy()
         root = ctk.CTk()
         root.geometry("500x500")
@@ -262,8 +310,117 @@ def main():
         switch_label = ctk.CTkLabel(frame_,text="SFX",font=("Helvetica",18))
         switch_label.place(relx=0.23,rely=0.3)
     
+        warn = ctk.CTkLabel(frame_,text="",text_color="#cc3300",font=("Helvetica",24))
+        warn.place(relx=0.5,rely=0.1,anchor=ctk.CENTER)
+    
         sc = settings.get("settings",{}).get("scaling",False)
         so = settings.get("settings",{}).get("sound",True)
+        
+        def check_is_string(hover,frame,main,button): #CREDITS; https://www.geeksforgeeks.org/check-if-a-given-string-is-a-valid-hexadecimal-color-code-or-not/
+            if hover[0] != "#":
+                return "hover"
+            if frame[0] != "#":
+                return "frame"
+            if main[0] != "#":
+                return "main"
+            if button[0] != "#":
+                return "button"
+            if (not(len(hover) == 4 or len(hover) == 7)):
+                return "hover"
+            if (not(len(frame) == 4 or len(frame) == 7)):
+                return "frame"
+            if (not(len(main) == 4 or len(main) == 7)):
+                return "main"
+            if (not(len(button) == 4 or len(button) == 7)):
+                return "button"
+            for i in range(1, len(hover)):
+                if (not((hover[i] >= '0' and hover[i] <= '9') or (hover[i] >= 'a' and hover[i] <= 'f') or (hover[i] >= 'A' or hover[i] <= 'F'))):
+                    return "hover"
+            for i in range(1, len(frame)):
+                if (not((frame[i] >= '0' and frame[i] <= '9') or (frame[i] >= 'a' and frame[i] <= 'f') or (frame[i] >= 'A' or frame[i] <= 'F'))):
+                    return "frame"
+            for i in range(1, len(main)):
+                if (not((main[i] >= '0' and main[i] <= '9') or (main[i] >= 'a' and main[i] <= 'f') or (main[i] >= 'A' or main[i] <= 'F'))):
+                    return "main"
+            for i in range(1, len(button)):
+                if (not((button[i] >= '0' and button[i] <= '9') or (button[i] >= 'a' and button[i] <= 'f') or (button[i] >= 'A' or button[i] <= 'F'))):
+                    return "button"
+            return True
+        def save_custom():
+            with open("save.json","r") as f:
+                settings = json.load(f)
+            print(len(hover.get()) <1)
+            if "custom_theme" not in settings["settings"]:
+                settings["settings"]["custom_theme"] = {}
+
+            settings["settings"]["custom_theme"]["hover"] = str(hover.get())
+            settings["settings"]["custom_theme"]["frame_bg"] = str(frame_bg.get())
+            settings["settings"]["custom_theme"]["main_bg"] = str(main_bg.get())
+            settings["settings"]["custom_theme"]["button_color"] = str(button_color.get())
+            a = check_is_string(hover=str(hover.get()),frame=str(frame_bg.get()),main=str(main_bg.get()),button=str(button_color.get()))
+            if a != True:
+                warn.configure(text=f"Invalid hex on {a}")
+                return
+            if theme_.get() == "Custom":
+                if len(hover.get()) > 1 and len(frame_bg.get()) > 1 and len(main_bg.get()) > 1 and len(button_color.get()) > 1:
+                    settings["settings"]["theme"] = "Custom"
+                    with open("save.json","w") as f:
+                        json.dump(settings,f)
+            with open("save.json","w") as f:
+                json.dump(settings,f)
+                
+        with open("save.json","r") as f:
+            settings = json.load(f)
+        hover_ = settings.get("settings",{}).get("custom_theme",{}).get("hover","")
+        frame_bg_ = settings.get("settings",{}).get("custom_theme",{}).get("frame_bg","")
+        main_bg_ = settings.get("settings",{}).get("custom_theme",{}).get("main_bg","")
+        button_color_ = settings.get("settings",{}).get("custom_theme",{}).get("button_color","")
+        hover = ctk.CTkEntry(frame_,placeholder_text="Color for Inactive")
+        frame_bg = ctk.CTkEntry(frame_,placeholder_text="Color for Frame")
+        main_bg = ctk.CTkEntry(frame_,placeholder_text="Color for Background")
+        button_color = ctk.CTkEntry(frame_,placeholder_text="Color For Button")
+        hover.insert(0,hover_)
+        frame_bg.insert(0,frame_bg_)
+        main_bg.insert(0,main_bg_)
+        button_color.insert(0,button_color_)
+        save = ctk.CTkButton(frame_,text="Apply",command=save_custom)
+        if theme == "custom":
+            hover.place(relx=0.3,rely=0.7,anchor=ctk.CENTER)
+            frame_bg.place(relx=0.7,rely=0.7,anchor=ctk.CENTER)
+            main_bg.place(relx=0.3,rely=0.8,anchor=ctk.CENTER)
+            button_color.place(relx=0.7,rely=0.8,anchor=ctk.CENTER)
+            save.place(relx=0.5,rely=0.9,anchor=ctk.CENTER)
+        def change_theme(choice):
+            if choice == "Custom":
+                hover.place(relx=0.3,rely=0.7,anchor=ctk.CENTER)
+                frame_bg.place(relx=0.7,rely=0.7,anchor=ctk.CENTER)
+                main_bg.place(relx=0.3,rely=0.8,anchor=ctk.CENTER)
+                button_color.place(relx=0.7,rely=0.8,anchor=ctk.CENTER)
+                save.place(relx=0.5,rely=0.9,anchor=ctk.CENTER)
+            else:
+                hover.place(relx=12)
+                frame_bg.place(relx=12)
+                main_bg.place(relx=12)
+                button_color.place(relx=12)
+            with open("save.json","r") as f:
+                settings = json.load(f)
+            print(choice)
+            if choice == "Custom":
+                print(len(hover.get()))
+                print(len(hover.get()) > 1 and len(frame_bg.get()) > 1 and len(main_bg.get()) > 1 and len(button_color.get()) > 1)
+                if len(hover.get()) > 1 and len(frame_bg.get()) > 1 and len(main_bg.get()) > 1 and len(button_color.get()) > 1:
+                    settings["settings"]["theme"] = choice
+                    with open("save.json","w") as f:
+                        json.dump(settings,f)
+                else:
+                    return
+            settings["settings"]["theme"] = choice
+            with open("save.json","w") as f:
+                json.dump(settings,f)
+        theme_ = ctk.CTkOptionMenu(frame_,values=["Default","Green","Custom"],command=change_theme)
+        theme_.place(relx=0.5,rely=0.5,anchor=ctk.CENTER)
+        a = settings.get("settings",{}).get("theme","Default")
+        theme_.set(a)
         if sc == True:
             scaling_option.select()
         if so == True:
@@ -340,18 +497,17 @@ def main():
             settings_.place(relx=0.5,rely=0.9,anchor=ctk.CENTER)
             start.configure(text="Retry")
             save()
-            button1.configure(fg_color="#1c1c1c",hover_color="#1c1c1c")
-            button2.configure(fg_color="#1c1c1c",hover_color="#1c1c1c")
-            button3.configure(fg_color="#1c1c1c",hover_color="#1c1c1c")
-            button4.configure(fg_color="#1c1c1c",hover_color="#1c1c1c")
+            restore()
             score_label.configure(text=f"{score}/{get_save()}")
             return
         _time = int(elapsed_time*-1)
         time_.configure(text=(_time))
-        window.after(25,clock)
+        window.after(100,clock)
     def open_settings(n):
         setting()
     window.bind("<Escape>",open_settings)
+    restore()
+    create_settings()
     window.mainloop()
     
     
