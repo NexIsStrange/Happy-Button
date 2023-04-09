@@ -3,8 +3,11 @@ import random
 import time
 from playsound import playsound
 import json
+import requests
 import os
+import webbrowser
 
+version = 1.2
 starting = False
 sound_loc = "button.wav"
 wrong_loc = "wrong.wav"
@@ -25,13 +28,17 @@ scaling = False
 
 
 
+def create_save():
+    if os.path.isfile("save.json"):
+        return False
+    else:
+        with open("save.json","w") as f:
+            f.write('{\n    "score": 0\n}')
+
+
+create_save()
 def main():
-    def create_save():
-        if os.path.isfile("save.json"):
-            return False
-        else:
-            with open("save.json","w") as f:
-                f.write('{\n    "score": 0\n}')
+    
     create_save()
     global scaling
     global sound
@@ -53,7 +60,30 @@ def main():
     window.minsize(500,250)
     frame = ctk.CTkFrame(window,width=450,height=200)
     frame.place(relx=0.5,rely=0.5,anchor=ctk.CENTER)        
-        
+    def get_check():
+        with open("save.json","r") as f:
+            settings = json.load(f)
+
+        cheforupd = settings.get("settings",{}).get("check",True)
+        if cheforupd != True:
+            return
+        try:
+            response = requests.get("https://api.github.com/repos/ctih1/Happy-Button/releases/latest")
+            a = response.json()["name"]
+            b = a.rsplit(" ",1)
+            print("access")
+            if float(b[1]) > version:
+                download.place(relx=0.8,rely=0.1,anchor=ctk.CENTER)
+                #webbrowser.open('github.com/ctih1/Happy-Button/releases/latest', new=2)
+            else:
+                print("Nothing")
+        except:
+            print("ratelimited")  
+    def download_():
+        webbrowser.open('github.com/ctih1/Happy-Button/releases/latest', new=2)
+    download = ctk.CTkButton(frame,text="Updates Available",font=("Helvetica",12),width=90,height=10.0,command=download_)
+    
+    get_check()
 
     def get_save():
         create_save()
@@ -279,15 +309,18 @@ def main():
                     time_.configure(font=("Helvetica",button_font))
                     score_label.configure(font=("Helvetica",button_font))
                     settings_.configure(width=(__width__-50)*0.2,height=(__height__-50)*0.05,font=("Helvetica",button_font))
-
+                    download.configure(width=(__width__-50)*0.2,height=(__height__-50)*0.05,font=("Helvetica",button_font*0.6))
+                    print(f"width={(__width__-50)*0.2},height={(__height__-50)*0.05}")
 
                 
                     frame.configure(width=__width__-50,height=__height__-50)   
                     
     def setting():
+        
         create_settings()
         window.destroy()
         root = ctk.CTk()
+        root.title("Settings")
         root.geometry("500x500")
         frame_ = ctk.CTkFrame(root,width=450,height=450)
         frame_.place(relx=0.5,rely=0.5,anchor=ctk.CENTER)
@@ -299,22 +332,40 @@ def main():
         def sou():
             mode_ = switch.get()
             sound_option_change = change_setting(setting="sound",mode=mode_)
-            
-        scaling_option = ctk.CTkSwitch(frame_,onvalue=True,offvalue=False,text="",switch_width=50,switch_height=25,command=sca)
-        scaling_option.place(relx=0.2,rely=0.2,anchor=ctk.CENTER)
-        scaling_label = ctk.CTkLabel(frame_,text="Dynamic Scaling",font=("Helvetica",18))
-        scaling_label.place(relx=0.37,rely=0.2,anchor=ctk.CENTER)
         
-        switch = ctk.CTkSwitch(master=frame_, onvalue=True, offvalue=False,font=("Helvetica",16),text="",switch_width=50,switch_height=25,command=sou)
-        switch.place(relx=0.09,rely=0.3)
+        def che():
+            mode_ = check_for_updates_switch.get()
+            check_for_updates_change = change_setting(setting="check",mode=mode_)
+            cfu = mode_
+            if mode_ == False:
+                check_for_updates_.place(relx=0.5,rely=0.08,anchor=ctk.CENTER)
+            else:
+                check_for_updates_.place(relx=12,rely=0.08,anchor=ctk.CENTER)
+        
+        scaling_option = ctk.CTkSwitch(frame_,onvalue=True,offvalue=False,text="",switch_width=50,switch_height=25,width=50,height=25,command=sca)
+        scaling_option.place(relx=0.2,rely=0.2,anchor=ctk.CENTER)
+        
+        scaling_label = ctk.CTkLabel(frame_,text="Dynamic Scaling",font=("Helvetica",18))
+        scaling_label.place(relx=0.41,rely=0.2,anchor=ctk.CENTER)
+        
+        switch = ctk.CTkSwitch(master=frame_, onvalue=True, offvalue=False,text="",switch_width=50,switch_height=25,width=50,height=25,command=sou)
+        switch.place(relx=0.2,rely=0.3,anchor=ctk.CENTER)
+        
         switch_label = ctk.CTkLabel(frame_,text="SFX",font=("Helvetica",18))
-        switch_label.place(relx=0.23,rely=0.3)
+        switch_label.place(relx=0.3,rely=0.3,anchor=ctk.CENTER)
+    
+        check_for_updates_switch = ctk.CTkSwitch(frame_,text="",onvalue=True,offvalue=False,switch_width=50,switch_height=25,command=che,width=50,height=25)
+        check_for_updates_switch.place(relx=0.2,rely=0.4,anchor=ctk.CENTER)
+        
+        check_for_updates_label = ctk.CTkLabel(frame_,text="Automatically check for updates",font=("Helvetica",18))
+        check_for_updates_label.place(relx=0.55,rely=0.4,anchor=ctk.CENTER)
     
         warn = ctk.CTkLabel(frame_,text="",text_color="#cc3300",font=("Helvetica",24))
         warn.place(relx=0.5,rely=0.1,anchor=ctk.CENTER)
     
         sc = settings.get("settings",{}).get("scaling",False)
         so = settings.get("settings",{}).get("sound",True)
+        cfu = settings.get("settings",{}).get("check",True)
         
         def check_is_string(hover,frame,main,button): #CREDITS; https://www.geeksforgeeks.org/check-if-a-given-string-is-a-valid-hexadecimal-color-code-or-not/
             if hover[0] != "#":
@@ -349,7 +400,7 @@ def main():
         def save_custom():
             with open("save.json","r") as f:
                 settings = json.load(f)
-            print(len(hover.get()) <1)
+
             if "custom_theme" not in settings["settings"]:
                 settings["settings"]["custom_theme"] = {}
 
@@ -371,6 +422,27 @@ def main():
                 
         with open("save.json","r") as f:
             settings = json.load(f)
+        def check_for_updates(mode):
+            with open("save.json","r") as f:
+                settings = json.load(f)
+            if mode == "automatic":
+                cheforupd = settings.get("settings",{}).get("check",True)
+                if cheforupd != True:
+                    return
+            try:
+                check_for_updates_.configure(state="disabled",text="Checking")
+                response = requests.get("https://api.github.com/repos/ctih1/Happy-Button/releases/latest")
+                a = response.json()["name"]
+                b = a.rsplit(" ",1)
+                
+                if float(b[1]) > version:
+                    check_for_updates_.configure(state="normal",text="Updates available.")
+                    webbrowser.open('github.com/ctih1/Happy-Button/releases/latest', new=2)
+                else:
+                    check_for_updates_.configure(state="disabled",text="No Updates available.")
+            except:
+                print("ratelimited")
+            
         hover_ = settings.get("settings",{}).get("custom_theme",{}).get("hover","")
         frame_bg_ = settings.get("settings",{}).get("custom_theme",{}).get("frame_bg","")
         main_bg_ = settings.get("settings",{}).get("custom_theme",{}).get("main_bg","")
@@ -383,7 +455,12 @@ def main():
         frame_bg.insert(0,frame_bg_)
         main_bg.insert(0,main_bg_)
         button_color.insert(0,button_color_)
+        def check_manual():
+            mode = "manual"
+            check_for_updates(mode=mode)
         save = ctk.CTkButton(frame_,text="Apply",command=save_custom)
+        check_for_updates_ = ctk.CTkButton(frame_,text="Check For Updates",command=check_manual)
+
         if theme == "custom":
             hover.place(relx=0.3,rely=0.7,anchor=ctk.CENTER)
             frame_bg.place(relx=0.7,rely=0.7,anchor=ctk.CENTER)
@@ -404,10 +481,7 @@ def main():
                 button_color.place(relx=12)
             with open("save.json","r") as f:
                 settings = json.load(f)
-            print(choice)
             if choice == "Custom":
-                print(len(hover.get()))
-                print(len(hover.get()) > 1 and len(frame_bg.get()) > 1 and len(main_bg.get()) > 1 and len(button_color.get()) > 1)
                 if len(hover.get()) > 1 and len(frame_bg.get()) > 1 and len(main_bg.get()) > 1 and len(button_color.get()) > 1:
                     settings["settings"]["theme"] = choice
                     with open("save.json","w") as f:
@@ -423,6 +497,10 @@ def main():
         theme_.set(a)
         if sc == True:
             scaling_option.select()
+        if cfu == True:
+            check_for_updates_switch.select()
+        else:
+            check_for_updates_.place(relx=0.5,rely=0.08,anchor=ctk.CENTER)
         if so == True:
             switch.select()
         def quit__():
@@ -506,6 +584,7 @@ def main():
     def open_settings(n):
         setting()
     window.bind("<Escape>",open_settings)
+    
     restore()
     create_settings()
     window.mainloop()
