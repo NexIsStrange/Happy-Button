@@ -6,11 +6,8 @@ import json
 import requests
 import os
 import webbrowser
-import threading
-import multiprocessing
-import pyaudio
 from pygame import mixer
-version = 1.3
+version = 1.4
 playing_music = False
 starting = False
 reaction_time = 0
@@ -322,66 +319,11 @@ def main():
 
                 
                     frame.configure(width=__width__-50,height=__height__-50)   
-    def change_keybind():
-        root_ = ctk.CTk()
-        root_.geometry("500x500")
-        root_.title("Change Keybinds")
-        frame__ = ctk.CTkFrame(root_,width=450,height=450)
-        frame__.place(relx=0.5,rely=0.5,anchor=ctk.CENTER)
-        
-        def deferr():
-            save_button.configure(text="Save",state="normal")
-        def chje():
-            if len(entry1.get()) > 1:
-                entry1.delete(0,1)
-            if len(entry2.get()) > 1:
-                entry2.delete(0,1)
-            if len(entry3.get()) > 1:
-                entry3.delete(0,1)
-            if len(entry4.get()) > 1:
-                entry4.delete(0,1)
-            window.after(10,chje)
-        def _save_():
-            create_settings()
-            with open("save.json","r") as f:
-                settings = json.load(f)
-            settings["settings"]["1"] = entry1.get()
-            settings["settings"]["2"] = entry2.get()
-            settings["settings"]["3"] = entry3.get()
-            settings["settings"]["4"] = entry4.get()
-            with open("save.json","w") as f:
-                json.dump(settings,f)
-            save_button.configure(text="Saved!",state="disabled")
-            root_.after(2500,deferr)
-        _1 = settings.get("settings",{}).get("1","")
-        _2 = settings.get("settings",{}).get("2","")
-        _3 = settings.get("settings",{}).get("3","")
-        _4 = settings.get("settings",{}).get("4","")
-        entry1 = ctk.CTkEntry(frame__,placeholder_text="1",width=75,height=75,font=("Helvetica",28))
-        entry1.insert(0,_1)
-        entry2 = ctk.CTkEntry(frame__,placeholder_text="2",width=75,height=75,font=("Helvetica",28))
-        entry2.insert(0,_2)
-        entry3 = ctk.CTkEntry(frame__,placeholder_text="3",width=75,height=75,font=("Helvetica",28))
-        entry3.insert(0,_3)
-        entry4 = ctk.CTkEntry(frame__,placeholder_text="4",width=75,height=75,font=("Helvetica",28))
-        entry4.insert(0,_4)
-        entry1.place(relx=0.2,rely=0.5,anchor=ctk.CENTER)
-        entry2.place(relx=0.4,rely=0.5,anchor=ctk.CENTER)
-        entry3.place(relx=0.6,rely=0.5,anchor=ctk.CENTER)
-        entry4.place(relx=0.8,rely=0.5,anchor=ctk.CENTER)
-        save_button = ctk.CTkButton(frame__,text="Save",command=_save_)
-        save_button.place(relx=0.5,rely=0.9,anchor=ctk.CENTER)
-        root_.after(10,chje)
-        
-        root_.mainloop()
-                 
-    def setting():
+    def custom_theme():
         try:
             mixer.music.pause()
         except:
             pass
-        create_settings()
-        window.destroy()
         root = ctk.CTk()
         root.title("Settings")
         root.geometry("500x500")
@@ -389,63 +331,7 @@ def main():
         frame_.place(relx=0.5,rely=0.5,anchor=ctk.CENTER)
         with open("save.json","r") as f:
             settings = json.load(f)
-        def sca( ):
-            mode_ = scaling_option.get()
-            scaling_option_change = change_setting(setting="scaling",mode=mode_)
-        def sou():
-            mode_ = switch.get()
-            sound_option_change = change_setting(setting="sound",mode=mode_)
-        
-        def che():
-            mode_ = check_for_updates_switch.get()
-            check_for_updates_change = change_setting(setting="check",mode=mode_)
-            cfu = mode_
-            if mode_ == False:
-                check_for_updates_.place(relx=0.5,rely=0.08,anchor=ctk.CENTER)
-            else:
-                check_for_updates_.place(relx=12,rely=0.08,anchor=ctk.CENTER)
-        
-        def mus():
-            mode_ = music_switch.get()
-            music_option_change = change_setting(setting="music",mode=mode_)
-            mus_ = mode_
-        
-        
-        scaling_option = ctk.CTkSwitch(frame_,onvalue=True,offvalue=False,text="",switch_width=50,switch_height=25,width=50,height=25,command=sca)
-        scaling_option.place(relx=0.1,rely=0.2,anchor=ctk.CENTER)
-        
-        scaling_label = ctk.CTkLabel(frame_,text="Dynamic Scaling",font=("Helvetica",18))
-        scaling_label.place(relx=0.31,rely=0.2,anchor=ctk.CENTER)
-        
-        switch = ctk.CTkSwitch(master=frame_, onvalue=True, offvalue=False,text="",switch_width=50,switch_height=25,width=50,height=25,command=sou)
-        switch.place(relx=0.1,rely=0.3,anchor=ctk.CENTER)
-        
-        switch_label = ctk.CTkLabel(frame_,text="SFX",font=("Helvetica",18))
-        switch_label.place(relx=0.2,rely=0.3,anchor=ctk.CENTER)
-    
-        check_for_updates_switch = ctk.CTkSwitch(frame_,text="",onvalue=True,offvalue=False,switch_width=50,switch_height=25,command=che,width=50,height=25)
-        check_for_updates_switch.place(relx=0.1,rely=0.4,anchor=ctk.CENTER)
-        
-        check_for_updates_label = ctk.CTkLabel(frame_,text="Automatically check for updates",font=("Helvetica",18))
-        check_for_updates_label.place(relx=0.45,rely=0.4,anchor=ctk.CENTER)
-    
-        music_switch = ctk.CTkSwitch(frame_,text="",command=mus,switch_width=50,switch_height=25,width=50,height=25,onvalue=True,offvalue=False)
-        music_switch.place(relx=0.9,rely=0.2,anchor=ctk.CENTER)
-        
-        music_label = ctk.CTkLabel(frame_,text="Music",font=("Helvetica",18))
-        music_label.place(relx=0.765,rely=0.2,anchor=ctk.CENTER)
-    
-        warn = ctk.CTkLabel(frame_,text="",text_color="#cc3300",font=("Helvetica",24))
-        warn.place(relx=0.5,rely=0.1,anchor=ctk.CENTER)
-    
-        keybinds = ctk.CTkButton(frame_,text="Change keybinds",command=change_keybind)
-        keybinds.place(relx=0.83,rely=0.08,anchor=ctk.CENTER)
-    
-        sc = settings.get("settings",{}).get("scaling",False)
-        so = settings.get("settings",{}).get("sound",True)
-        cfu = settings.get("settings",{}).get("check",True)
-        mus_ = settings.get("settings",{}).get("music",False)
-        
+
         def check_is_string(hover,frame,main,button): #CREDITS; https://www.geeksforgeeks.org/check-if-a-given-string-is-a-valid-hexadecimal-color-code-or-not/
             if hover[0] != "#":
                 return "hover"
@@ -522,18 +408,62 @@ def main():
             except:
                 print("ratelimited")
             
-        hover_ = settings.get("settings",{}).get("custom_theme",{}).get("hover","")
-        frame_bg_ = settings.get("settings",{}).get("custom_theme",{}).get("frame_bg","")
-        main_bg_ = settings.get("settings",{}).get("custom_theme",{}).get("main_bg","")
-        button_color_ = settings.get("settings",{}).get("custom_theme",{}).get("button_color","")
+        hover_ = settings.get("settings",{}).get("custom_theme",{}).get("hover",None)
+        frame_bg_ = settings.get("settings",{}).get("custom_theme",{}).get("frame_bg",None)
+        main_bg_ = settings.get("settings",{}).get("custom_theme",{}).get("main_bg",None)
+        button_color_ = settings.get("settings",{}).get("custom_theme",{}).get("button_color",None)
+        warn = ctk.CTkLabel(frame_,text="",text_color="#cc3300",font=("Helvetica",24))
+        warn.place(relx=0.5,rely=0.1,anchor=ctk.CENTER)
         hover = ctk.CTkEntry(frame_,placeholder_text="Color for Inactive")
         frame_bg = ctk.CTkEntry(frame_,placeholder_text="Color for Frame")
         main_bg = ctk.CTkEntry(frame_,placeholder_text="Color for Background")
         button_color = ctk.CTkEntry(frame_,placeholder_text="Color For Button")
-        hover.insert(0,hover_)
-        frame_bg.insert(0,frame_bg_)
-        main_bg.insert(0,main_bg_)
-        button_color.insert(0,button_color_)
+        
+        button_1 = ctk.CTkButton(frame_,width=75,height=75,text="",corner_radius=120)
+        button_1.place(relx=0.2,rely=0.3,anchor=ctk.CENTER)
+        button_2 = ctk.CTkButton(frame_,width=75,height=75,text="",corner_radius=120)
+        button_2.place(relx=0.4,rely=0.3,anchor=ctk.CENTER)
+        button_3 = ctk.CTkButton(frame_,width=75,height=75,text="",corner_radius=120)
+        button_3.place(relx=0.6,rely=0.3,anchor=ctk.CENTER)
+        button_4 = ctk.CTkButton(frame_,width=75,height=75,text="",corner_radius=120)
+        button_4.place(relx=0.8,rely=0.3,anchor=ctk.CENTER)
+        def update_():
+            hover_ = hover.get()
+            frame_bg_ = frame_bg.get()
+            main_bg_ = main_bg.get()
+            button_color_ = button_color.get()
+            try:
+                button_1.configure(fg_color=hover_,hover_color=hover_)
+            except Exception as e:
+                pass
+            try:
+                button_2.configure(fg_color=hover_,hover_color=hover_)
+            except Exception as e:
+                pass
+            try:
+                button_3.configure(fg_color=button_color_,hover_color=button_color_)
+            except Exception as e:
+                pass
+            try:
+                button_4.configure(fg_color=hover_,hover_color=hover_)
+            except Exception as e:
+                pass
+            try:
+                frame_.configure(fg_color=frame_bg_)
+            except Exception as e:
+                pass
+            try:
+                root.configure(fg_color=main_bg_)
+            except Exception as e:
+                pass
+            root.after(100,update_)
+        if not all([hover_,frame_bg_,main_bg_,button_color_]):
+            pass
+        else:
+            hover.insert(0,hover_)
+            frame_bg.insert(0,frame_bg_)
+            main_bg.insert(0,main_bg_)
+            button_color.insert(0,button_color_)
         def check_manual():
             mode = "manual"
             check_for_updates(mode=mode)
@@ -571,9 +501,171 @@ def main():
             with open("save.json","w") as f:
                 json.dump(settings,f)
         theme_ = ctk.CTkOptionMenu(frame_,values=["Default","Green","Custom"],command=change_theme)
-        theme_.place(relx=0.5,rely=0.5,anchor=ctk.CENTER)
+        theme_.place(relx=0.5,rely=0.60,anchor=ctk.CENTER)
         a = settings.get("settings",{}).get("theme","Default")
+        version_label = ctk.CTkLabel(frame_,text=f"{version}",font=("Helvetica",12))
+        version_label.place(relx=0.05,rely=0.95,anchor=ctk.CENTER)
         theme_.set(a)
+
+        root.after(100,update_)
+        #root.protocol("WM_DELETE_WINDOW", quit__)
+        root.mainloop()
+        
+    def change_keybind():
+        root_ = ctk.CTk()
+        root_.geometry("500x500")
+        root_.title("Change Keybinds")
+        frame__ = ctk.CTkFrame(root_,width=450,height=450)
+        frame__.place(relx=0.5,rely=0.5,anchor=ctk.CENTER)
+        
+        def deferr():
+            save_button.configure(text="Save",state="normal")
+        def chje():
+            if len(entry1.get()) > 1:
+                entry1.delete(0,1)
+            if len(entry2.get()) > 1:
+                entry2.delete(0,1)
+            if len(entry3.get()) > 1:
+                entry3.delete(0,1)
+            if len(entry4.get()) > 1:
+                entry4.delete(0,1)
+            window.after(10,chje)
+        def _save_():
+            create_settings()
+            with open("save.json","r") as f:
+                settings = json.load(f)
+            settings["settings"]["1"] = entry1.get()
+            settings["settings"]["2"] = entry2.get()
+            settings["settings"]["3"] = entry3.get()
+            settings["settings"]["4"] = entry4.get()
+            with open("save.json","w") as f:
+                json.dump(settings,f)
+            save_button.configure(text="Saved!",state="disabled")
+            root_.after(2500,deferr)
+        _1 = settings.get("settings",{}).get("1","")
+        _2 = settings.get("settings",{}).get("2","")
+        _3 = settings.get("settings",{}).get("3","")
+        _4 = settings.get("settings",{}).get("4","")
+        entry1 = ctk.CTkEntry(frame__,placeholder_text="1",width=75,height=75,font=("Helvetica",28))
+        entry1.insert(0,_1)
+        entry2 = ctk.CTkEntry(frame__,placeholder_text="2",width=75,height=75,font=("Helvetica",28))
+        entry2.insert(0,_2)
+        entry3 = ctk.CTkEntry(frame__,placeholder_text="3",width=75,height=75,font=("Helvetica",28))
+        entry3.insert(0,_3)
+        entry4 = ctk.CTkEntry(frame__,placeholder_text="4",width=75,height=75,font=("Helvetica",28))
+        entry4.insert(0,_4)
+        entry1.place(relx=0.2,rely=0.5,anchor=ctk.CENTER)
+        entry2.place(relx=0.4,rely=0.5,anchor=ctk.CENTER)
+        entry3.place(relx=0.6,rely=0.5,anchor=ctk.CENTER)
+        entry4.place(relx=0.8,rely=0.5,anchor=ctk.CENTER)
+        save_button = ctk.CTkButton(frame__,text="Save",command=_save_)
+        save_button.place(relx=0.5,rely=0.9,anchor=ctk.CENTER)
+        root_.after(10,chje)
+        
+        root_.mainloop()
+        
+    def setting():
+        try:
+            mixer.music.pause()
+        except:
+            pass
+        create_settings()
+        root = ctk.CTk()
+        root.title("Settings")
+        root.geometry("500x500")
+        def check_manual():
+            mode = "manual"
+            check_for_updates(mode=mode)
+        frame_ = ctk.CTkFrame(root,width=450,height=450)
+        frame_.place(relx=0.5,rely=0.5,anchor=ctk.CENTER)
+        check_for_updates_ = ctk.CTkButton(frame_,text="Check For Updates",command=check_manual)
+        with open("save.json","r") as f:
+            settings = json.load(f)
+        def sca( ):
+            mode_ = scaling_option.get()
+            scaling_option_change = change_setting(setting="scaling",mode=mode_)
+        def sou():
+            mode_ = switch.get()
+            sound_option_change = change_setting(setting="sound",mode=mode_)
+        
+        def che():
+            mode_ = check_for_updates_switch.get()
+            check_for_updates_change = change_setting(setting="check",mode=mode_)
+            cfu = mode_
+            if mode_ == False:
+                check_for_updates_.place(relx=0.5,rely=0.08,anchor=ctk.CENTER)
+            else:
+                check_for_updates_.place(relx=12,rely=0.08,anchor=ctk.CENTER)
+        
+        def mus():
+            mode_ = music_switch.get()
+            music_option_change = change_setting(setting="music",mode=mode_)
+            mus_ = mode_
+        scaling_option = ctk.CTkSwitch(frame_,onvalue=True,offvalue=False,text="",switch_width=50,switch_height=25,width=50,height=25,command=sca)
+        scaling_option.place(relx=0.1,rely=0.2,anchor=ctk.CENTER)
+        
+        scaling_label = ctk.CTkLabel(frame_,text="Dynamic Scaling",font=("Helvetica",18))
+        scaling_label.place(relx=0.31,rely=0.2,anchor=ctk.CENTER)
+        
+        switch = ctk.CTkSwitch(master=frame_, onvalue=True, offvalue=False,text="",switch_width=50,switch_height=25,width=50,height=25,command=sou)
+        switch.place(relx=0.1,rely=0.3,anchor=ctk.CENTER)
+        
+        switch_label = ctk.CTkLabel(frame_,text="SFX",font=("Helvetica",18))
+        switch_label.place(relx=0.2,rely=0.3,anchor=ctk.CENTER)
+    
+        check_for_updates_switch = ctk.CTkSwitch(frame_,text="",onvalue=True,offvalue=False,switch_width=50,switch_height=25,command=che,width=50,height=25)
+        check_for_updates_switch.place(relx=0.1,rely=0.4,anchor=ctk.CENTER)
+        
+        check_for_updates_label = ctk.CTkLabel(frame_,text="Automatically check for updates",font=("Helvetica",18))
+        check_for_updates_label.place(relx=0.45,rely=0.4,anchor=ctk.CENTER)
+    
+        music_switch = ctk.CTkSwitch(frame_,text="",command=mus,switch_width=50,switch_height=25,width=50,height=25,onvalue=True,offvalue=False)
+        music_switch.place(relx=0.9,rely=0.2,anchor=ctk.CENTER)
+        
+        music_label = ctk.CTkLabel(frame_,text="Music",font=("Helvetica",18))
+        music_label.place(relx=0.765,rely=0.2,anchor=ctk.CENTER)
+    
+        warn = ctk.CTkLabel(frame_,text="",text_color="#cc3300",font=("Helvetica",24))
+        warn.place(relx=0.5,rely=0.1,anchor=ctk.CENTER)
+    
+        keybinds = ctk.CTkButton(frame_,text="Change keybinds",command=change_keybind)
+        keybinds.place(relx=0.83,rely=0.08,anchor=ctk.CENTER)
+    
+        #share_button = ctk.CTkButton(frame_,text="Share",command=share)
+        #share_button.place(relx=0.5,rely=0.94,anchor=ctk.CENTER)
+    
+        sc = settings.get("settings",{}).get("scaling",False)
+        so = settings.get("settings",{}).get("sound",True)
+        cfu = settings.get("settings",{}).get("check",True)
+        mus_ = settings.get("settings",{}).get("music",False)
+        theme_button = ctk.CTkButton(frame_,text="Theme",command=custom_theme)
+        theme_button.place(relx=0.5,rely=0.7,anchor=ctk.CENTER)
+        with open("save.json","r") as f:
+            settings = json.load(f)
+        def check_for_updates(mode):
+            with open("save.json","r") as f:
+                settings = json.load(f)
+            if mode == "automatic":
+                cheforupd = settings.get("settings",{}).get("check",True)
+                if cheforupd != True:
+                    return
+            try:
+                check_for_updates_.configure(state="disabled",text="Checking")
+                response = requests.get("https://api.github.com/repos/ctih1/Happy-Button/releases/latest")
+                a = response.json()["name"]
+                b = a.rsplit(" ",1)
+                
+                if float(b[1]) > version:
+                    check_for_updates_.configure(state="normal",text="Updates available.")
+                    webbrowser.open('github.com/ctih1/Happy-Button/releases/latest', new=2)
+                else:
+                    check_for_updates_.configure(state="disabled",text="No Updates available.")
+            except:
+                print("ratelimited")
+            
+
+        version_label = ctk.CTkLabel(frame_,text=f"{version}",font=("Helvetica",12))
+        version_label.place(relx=0.05,rely=0.95,anchor=ctk.CENTER)
         if sc == True:
             scaling_option.select()
         if cfu == True:
@@ -585,6 +677,7 @@ def main():
         if mus_ == True:
             music_switch.select()
         def quit__():
+            window.destroy()
             root.destroy()
             main()
         root.protocol("WM_DELETE_WINDOW", quit__)
@@ -613,7 +706,7 @@ def main():
     score_label = ctk.CTkLabel(frame,text=f"{score}/{get_save()}",font=("Helvetica",20))
     score_label.place(relx=0.03,rely=0.03)
 
-    
+   
 
     window.bind("1",lambda event: red_button())
     window.bind("2",lambda event: yellow_button())
@@ -655,7 +748,7 @@ def main():
 
     def song(mode):
         if mode == "play":
-            mixer.music.play(loops=1)
+            mixer.music.play(loops=999)
         elif mode == "pause":
             mixer.music.pause()
         else:
