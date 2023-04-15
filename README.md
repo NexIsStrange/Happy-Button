@@ -15,7 +15,7 @@
 -Disable Dynamic Scaling; Open Happy Button and press ESC -> Untick "Dynamic Scaling"
 
 <h3>Any JSON Error:</h3>
-<h2>WARNING: This *WILL* delete your highscore and settings.</h2>
+<h4>WARNING: This *WILL* delete your highscore and settings.</h2>
 -Open Happy Button install location -> Delete the "save.json" file. <a href="https://github.com/ctih1/Happy-Button/wiki/How-to-delete-%22save.json%22">How to find "save.json" file</a>
 
 <p>Older Versions: https://github.com/ctih1/Happy-Button-Beta<p>
