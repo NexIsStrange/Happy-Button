@@ -67,9 +67,9 @@ def main():
         average_label_label.place(relx=0.7,rely=0.15,anchor=ctk.CENTER)
         min_label_label = ctk.CTkLabel(thing_frame,text="Minimum",font=("Helvetica",14))
         min_label_label.place(relx=0.3,rely=0.15,anchor=ctk.CENTER)
-        average_label = ctk.CTkButton(thing_frame,text=f"{average_time_}\nms",width=75,height=75,font=("Helvetica",14))
+        average_label = ctk.CTkButton(thing_frame,text=f"{average_time_*1000}\nms",width=75,height=75,font=("Helvetica",14))
         average_label.place(relx=0.7,rely=0.5,anchor=ctk.CENTER)
-        min_label = ctk.CTkButton(thing_frame,text=f"{min_time_}\nms",width=75,height=75,font=("Helvetica",14))
+        min_label = ctk.CTkButton(thing_frame,text=f"{min_time_*1000}\nms",width=75,height=75,font=("Helvetica",14))
         min_label.place(relx=0.3,rely=0.5,anchor=ctk.CENTER)
         
         thing.mainloop()
