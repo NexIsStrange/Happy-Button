@@ -1,17 +1,15 @@
 import customtkinter as ctk
 import random
 import time
-from playsound import playsound
 import json
 import requests
 import os
 import webbrowser
 from pygame import mixer
-version = 1.4
+import numpy
+version = 1.5 
 playing_music = False
 starting = False
-reaction_time = 0
-reaction_amount = 0
 sound_loc = "button.wav"
 wrong_loc = "wrong.wav"
 song_loc = "song.mp3"
@@ -19,6 +17,10 @@ sound = False
 music = False
 c_button = None
 started = False
+average_time = []
+correct_list = []
+reaction_click = None
+reaction_start = None
 p = None
 scale = 150
 score = 0
@@ -32,7 +34,8 @@ ctk.set_appearance_mode("Dark")
 scaling = False
 
 mixer.init()
-mixer.music.load("song.mp3")
+
+
 
 
 def create_save():
@@ -45,6 +48,31 @@ def create_save():
 
 create_save()
 def main():
+    
+    def show_results():
+        thing = ctk.CTk()
+        thing.geometry("225x175")
+        thing_frame = ctk.CTkFrame(thing,width=225,height=150)
+        thing.title("Reaction Time")
+        thing_frame.place(relx=0.5,rely=0.5,anchor=ctk.CENTER)
+        min_time_ =  round(min(average_time),4)
+        
+        percentage = (sum(correct_list) / len(correct_list)) * 100
+        #print(correct_list)
+        accuracy_out_label = ctk.CTkLabel(thing_frame,text=f"{sum(correct_list)}/{len(correct_list)}\n({round(percentage, 2)}%)",font=("Helvetica",14))
+        accuracy_out_label.place(relx=0.5,rely=0.85,anchor=ctk.CENTER)
+        
+        average_time_ = round(numpy.mean(average_time),4)
+        average_label_label = ctk.CTkLabel(thing_frame,text="Average",font=("Helvetica",14))
+        average_label_label.place(relx=0.7,rely=0.15,anchor=ctk.CENTER)
+        min_label_label = ctk.CTkLabel(thing_frame,text="Minimum",font=("Helvetica",14))
+        min_label_label.place(relx=0.3,rely=0.15,anchor=ctk.CENTER)
+        average_label = ctk.CTkButton(thing_frame,text=f"{average_time_*1000}\nms",width=75,height=75,font=("Helvetica",14))
+        average_label.place(relx=0.7,rely=0.5,anchor=ctk.CENTER)
+        min_label = ctk.CTkButton(thing_frame,text=f"{min_time_*1000}\nms",width=75,height=75,font=("Helvetica",14))
+        min_label.place(relx=0.3,rely=0.5,anchor=ctk.CENTER)
+        
+        thing.mainloop()
     
     create_save()
     global scaling
@@ -59,12 +87,18 @@ def main():
         settings = json.load(f)
     theme = settings.get("settings",{}).get("theme","default").lower()
 
+
     scaling = check_value(setting="scaling",default=False)
     sound = check_value(setting="sound",default=True)
     window = ctk.CTk()
     window.geometry("500x250")
     window.title("Happy Button")
     window.minsize(500,250)
+    if theme == "custom":
+        with open("save.json","r") as f:
+            settings = json.load(f)
+        opac = settings.get("settings",{}).get("custom_theme",{}).get("opacity",1)
+        window.attributes("-a",float(opac))
     frame = ctk.CTkFrame(window,width=450,height=200)
     frame.place(relx=0.5,rely=0.5,anchor=ctk.CENTER)        
     def get_check():
@@ -141,16 +175,20 @@ def main():
         if started == False:
             return
         if recent_button == c_button:
+            correct_list.append(1)
+            a = time.time() - reaction_start
+            average_time.append(a)
             start_time += 0.2
             score += 1
             if sound == True:
-                playsound(sound_loc,False)
+                mixer.Channel(1).play(mixer.Sound(sound_loc))
             score_label.configure(text=f"{score}/{get_save()}")
             random_button()
         else:
+            correct_list.append(0)
             start_time -= 1
             if sound == True:
-                playsound(wrong_loc,False)
+                mixer.Channel(2).play(mixer.Sound(wrong_loc))
             return
         
     def yellow_button():
@@ -167,15 +205,19 @@ def main():
             return
         recent_button = "yellow"
         if recent_button == c_button:
+            correct_list.append(1)
+            a = time.time() - reaction_start
+            average_time.append(a)
             start_time += 0.2
             if sound == True:
-                playsound(sound_loc,False)
+                mixer.Channel(1).play(mixer.Sound(sound_loc))
             score += 1
             score_label.configure(text=f"{score}/{get_save()}")
             random_button()
         else:
             if sound == True:
-                playsound(wrong_loc,False)
+                mixer.Channel(2).play(mixer.Sound(wrong_loc))
+            correct_list.append(0)
             start_time -= 1
             return
     def blue_button():
@@ -191,16 +233,19 @@ def main():
         if started == False:
             return
         if recent_button == c_button:
-            
+            correct_list.append(1)
+            a = time.time() - reaction_start
+            average_time.append(a)
             start_time += 0.2
             if sound == True:
-                playsound(sound_loc,False)
+                mixer.Channel(1).play(mixer.Sound(sound_loc))
             score += 1
             score_label.configure(text=f"{score}/{get_save()}")
             random_button()
         else:
+            correct_list.append(0)
             if sound == True:
-                playsound(wrong_loc,False)
+                mixer.Channel(2).play(mixer.Sound(wrong_loc))
             start_time -= 1
             return
     def green_button():
@@ -218,18 +263,25 @@ def main():
             return
         recent_button = "green"
         if recent_button == c_button:
+            correct_list.append(1)
+            if reaction_start != None:
+                a = time.time() - reaction_start
+                average_time.append(a)
             if sound == True:
-                playsound(sound_loc,False)
+                mixer.Channel(1).play(mixer.Sound(sound_loc))
             start_time += 0.2
             score += 1
             score_label.configure(text=f"{score}/{get_save()}")
             random_button()
         else:
+            correct_list.append(0)
             if sound == True:
-                playsound(wrong_loc,False)
+                mixer.Channel(2).play(mixer.Sound(wrong_loc))
             start_time -= 1
             return
     def get_theme(color):
+        global reaction_start
+        reaction_start = time.time()
         if theme == "green":
             return "#61B62F"
         if theme == "default":
@@ -363,9 +415,6 @@ def main():
                     return "button"
             return True
         def save_custom():
-            with open("save.json","r") as f:
-                settings = json.load(f)
-
             if "custom_theme" not in settings["settings"]:
                 settings["settings"]["custom_theme"] = {}
 
@@ -373,6 +422,7 @@ def main():
             settings["settings"]["custom_theme"]["frame_bg"] = str(frame_bg.get())
             settings["settings"]["custom_theme"]["main_bg"] = str(main_bg.get())
             settings["settings"]["custom_theme"]["button_color"] = str(button_color.get())
+            settings["settings"]["custom_theme"]["opacity"] = str(opacity_slider.get())
             a = check_is_string(hover=str(hover.get()),frame=str(frame_bg.get()),main=str(main_bg.get()),button=str(button_color.get()))
             if a != True:
                 warn.configure(text=f"Invalid hex on {a}")
@@ -382,14 +432,11 @@ def main():
                     settings["settings"]["theme"] = "Custom"
                     with open("save.json","w") as f:
                         json.dump(settings,f)
+            settings["settings"]["theme"] = theme_.get()
             with open("save.json","w") as f:
                 json.dump(settings,f)
                 
-        with open("save.json","r") as f:
-            settings = json.load(f)
         def check_for_updates(mode):
-            with open("save.json","r") as f:
-                settings = json.load(f)
             if mode == "automatic":
                 cheforupd = settings.get("settings",{}).get("check",True)
                 if cheforupd != True:
@@ -419,44 +466,73 @@ def main():
         main_bg = ctk.CTkEntry(frame_,placeholder_text="Color for Background")
         button_color = ctk.CTkEntry(frame_,placeholder_text="Color For Button")
         
-        button_1 = ctk.CTkButton(frame_,width=75,height=75,text="",corner_radius=120)
-        button_1.place(relx=0.2,rely=0.3,anchor=ctk.CENTER)
-        button_2 = ctk.CTkButton(frame_,width=75,height=75,text="",corner_radius=120)
-        button_2.place(relx=0.4,rely=0.3,anchor=ctk.CENTER)
-        button_3 = ctk.CTkButton(frame_,width=75,height=75,text="",corner_radius=120)
-        button_3.place(relx=0.6,rely=0.3,anchor=ctk.CENTER)
-        button_4 = ctk.CTkButton(frame_,width=75,height=75,text="",corner_radius=120)
-        button_4.place(relx=0.8,rely=0.3,anchor=ctk.CENTER)
+        def slider(value):
+            root.attributes("-a",value)
+            settings["settings"]["custom_theme"]["opacity"] = value
+            with open("save.json","w") as f:
+                json.dump(settings,f)     
+        button_1 = ctk.CTkButton(frame_,width=100,height=100,text="",corner_radius=120)
+        button_1.place(relx=0.13,rely=0.3,anchor=ctk.CENTER)
+        button_2 = ctk.CTkButton(frame_,width=100,height=100,text="",corner_radius=120)
+        button_2.place(relx=0.38,rely=0.3,anchor=ctk.CENTER)
+        button_3 = ctk.CTkButton(frame_,width=100,height=100,text="",corner_radius=120)
+        button_3.place(relx=0.63,rely=0.3,anchor=ctk.CENTER)
+        button_4 = ctk.CTkButton(frame_,width=100,height=100,text="",corner_radius=120)
+        button_4.place(relx=0.87,rely=0.3,anchor=ctk.CENTER)
+        opacity_label = ctk.CTkLabel(frame_,text="Opacity",font=("Helvetica",12))
+        opacity_slider = ctk.CTkSlider(frame_,from_=0.1, to=1,command=slider)
+        opacity_value = settings.get("settings",{}).get("custom_theme",{}).get("opacity",1)
+        opacity_slider.set(float(opacity_value))
+        
+        
         def update_():
+            theme__ = theme_.get()
+            
             hover_ = hover.get()
             frame_bg_ = frame_bg.get()
             main_bg_ = main_bg.get()
             button_color_ = button_color.get()
-            try:
-                button_1.configure(fg_color=hover_,hover_color=hover_)
-            except Exception as e:
-                pass
-            try:
-                button_2.configure(fg_color=hover_,hover_color=hover_)
-            except Exception as e:
-                pass
-            try:
-                button_3.configure(fg_color=button_color_,hover_color=button_color_)
-            except Exception as e:
-                pass
-            try:
-                button_4.configure(fg_color=hover_,hover_color=hover_)
-            except Exception as e:
-                pass
-            try:
-                frame_.configure(fg_color=frame_bg_)
-            except Exception as e:
-                pass
-            try:
-                root.configure(fg_color=main_bg_)
-            except Exception as e:
-                pass
-            root.after(100,update_)
+            if theme__ == "Custom":
+                try:
+                    button_1.configure(fg_color=hover_,hover_color=hover_)
+                except Exception as e:
+                    pass
+                try:
+                    button_2.configure(fg_color=hover_,hover_color=hover_)
+                except Exception as e:
+                    pass
+                try:
+                    button_3.configure(fg_color=button_color_,hover_color=button_color_)
+                except Exception as e:
+                    pass
+                try:
+                    button_4.configure(fg_color=hover_,hover_color=hover_)
+                except Exception as e:
+                    pass
+                try:
+                    frame_.configure(fg_color=frame_bg_)
+                except Exception as e:
+                    pass
+                try:
+                    root.configure(fg_color=main_bg_)
+                except Exception as e:
+                    pass
+                
+            if theme__=="Default":
+                button_1.configure(fg_color="#1c1c1c",hover_color="#1c1c1c")
+                button_2.configure(fg_color="#1c1c1c",hover_color="#1c1c1c")
+                button_3.configure(fg_color="#ffffff",hover_color="#ffffff")
+                button_4.configure(fg_color="#1c1c1c",hover_color="#1c1c1c")
+                frame_.configure(fg_color="gray17")
+                root.configure(fg_color="gray14")
+            if theme__ == "Green":
+                button_1.configure(fg_color="#254B0F",hover_color="#254B0F")
+                button_2.configure(fg_color="#254B0F",hover_color="#254B0F")
+                button_3.configure(fg_color="#61B62F",hover_color="#61B62F")
+                button_4.configure(fg_color="#254B0F",hover_color="#254B0F")
+                frame_.configure(fg_color="#142C06")
+                root.configure(fg_color="#0E1F04",hover_color="#254B0F")
+            window.after(250,update_)
         if not all([hover_,frame_bg_,main_bg_,button_color_]):
             pass
         else:
@@ -469,46 +545,55 @@ def main():
             check_for_updates(mode=mode)
         save = ctk.CTkButton(frame_,text="Apply",command=save_custom)
         check_for_updates_ = ctk.CTkButton(frame_,text="Check For Updates",command=check_manual)
-
         if theme == "custom":
+            opacity_label.place(relx=0.5,rely=0.05,anchor=ctk.CENTER)
             hover.place(relx=0.3,rely=0.7,anchor=ctk.CENTER)
+            root.attributes("-a",float(opacity_value))
             frame_bg.place(relx=0.7,rely=0.7,anchor=ctk.CENTER)
             main_bg.place(relx=0.3,rely=0.8,anchor=ctk.CENTER)
             button_color.place(relx=0.7,rely=0.8,anchor=ctk.CENTER)
             save.place(relx=0.5,rely=0.9,anchor=ctk.CENTER)
+            opacity_slider.place(relx=0.5,rely=0.1,anchor=ctk.CENTER)
         def change_theme(choice):
+            print(choice)
             if choice == "Custom":
+                opacity_label.place(relx=0.5,rely=0.05,anchor=ctk.CENTER)
+                root.attributes("-a",float(opacity_value))
+                opacity_slider.place(relx=0.5,rely=0.1,anchor=ctk.CENTER)
                 hover.place(relx=0.3,rely=0.7,anchor=ctk.CENTER)
                 frame_bg.place(relx=0.7,rely=0.7,anchor=ctk.CENTER)
                 main_bg.place(relx=0.3,rely=0.8,anchor=ctk.CENTER)
                 button_color.place(relx=0.7,rely=0.8,anchor=ctk.CENTER)
                 save.place(relx=0.5,rely=0.9,anchor=ctk.CENTER)
             else:
+                opacity_label.place(relx=12,rely=12)
+                root.attributes("-a",1)
                 hover.place(relx=12)
+                opacity_slider.place(relx=12,rely=12)
                 frame_bg.place(relx=12)
                 main_bg.place(relx=12)
                 button_color.place(relx=12)
-            with open("save.json","r") as f:
-                settings = json.load(f)
             if choice == "Custom":
                 if len(hover.get()) > 1 and len(frame_bg.get()) > 1 and len(main_bg.get()) > 1 and len(button_color.get()) > 1:
                     settings["settings"]["theme"] = choice
-                    with open("save.json","w") as f:
-                        json.dump(settings,f)
+                    #with open("save.json","w") as f:
+                        #json.dump(settings,f)
                 else:
                     return
             settings["settings"]["theme"] = choice
-            with open("save.json","w") as f:
-                json.dump(settings,f)
+            #with open("save.json","w") as f:
+                #json.dump(settings,f)
         theme_ = ctk.CTkOptionMenu(frame_,values=["Default","Green","Custom"],command=change_theme)
         theme_.place(relx=0.5,rely=0.60,anchor=ctk.CENTER)
         a = settings.get("settings",{}).get("theme","Default")
         version_label = ctk.CTkLabel(frame_,text=f"{version}",font=("Helvetica",12))
         version_label.place(relx=0.05,rely=0.95,anchor=ctk.CENTER)
         theme_.set(a)
+        
+        
 
+            
         root.after(100,update_)
-        #root.protocol("WM_DELETE_WINDOW", quit__)
         root.mainloop()
         
     def change_keybind():
@@ -677,7 +762,10 @@ def main():
         if mus_ == True:
             music_switch.select()
         def quit__():
-            window.destroy()
+            try:
+                window.destroy()
+            except:
+                root.destroy()
             root.destroy()
             main()
         root.protocol("WM_DELETE_WINDOW", quit__)
@@ -748,9 +836,9 @@ def main():
 
     def song(mode):
         if mode == "play":
-            mixer.music.play(loops=999)
+            mixer.Channel(0).play(mixer.Sound(song_loc))
         elif mode == "pause":
-            mixer.music.pause()
+            mixer.pause()
         else:
             print(f"{mode}")
     def play():
@@ -771,6 +859,7 @@ def main():
         global elapsed_time
         global score
         global started
+        print(average_time)
         limit = 15
         
         elapsed_time = time.time() - start_time - limit
@@ -784,6 +873,7 @@ def main():
             save()
             restore()
             score_label.configure(text=f"{score}/{get_save()}")
+            show_results()
             return
         _time = int(elapsed_time*-1)
         time_.configure(text=(_time))
@@ -798,4 +888,7 @@ def main():
     window.mainloop()
     
     
-main()
+if __name__ == "__main__":
+    main()
+else:
+    print(__name__)
