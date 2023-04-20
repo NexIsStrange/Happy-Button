@@ -7,7 +7,7 @@ import os
 import webbrowser
 from pygame import mixer
 import numpy
-version = 1.5 
+version = 1.6
 playing_music = False
 starting = False
 sound_loc = "button.wav"
@@ -48,30 +48,61 @@ def create_save():
 
 create_save()
 def main():
+    def show_results(x,y):
+        
+        global correct_list
+        global average_time
+        global reaction_click
+        global reaction_start
+        
+        def focus_(n):
+            thing.destroy()
+
     
-    def show_results():
         thing = ctk.CTk()
-        thing.geometry("225x175")
+        thing.geometry(f"225x175+{x}+{y}")
         thing_frame = ctk.CTkFrame(thing,width=225,height=150)
         thing.title("Reaction Time")
         thing_frame.place(relx=0.5,rely=0.5,anchor=ctk.CENTER)
-        min_time_ =  round(min(average_time),4)
+        try:
+            min_time_ =  round(min(average_time),4)
+        except:
+            min_time_ = 0
         
-        percentage = (sum(correct_list) / len(correct_list)) * 100
+        try:
+            percentage = (sum(correct_list) / len(correct_list)) * 100
+        except:
+            precentage = 0
+
         #print(correct_list)
         accuracy_out_label = ctk.CTkLabel(thing_frame,text=f"{sum(correct_list)}/{len(correct_list)}\n({round(percentage, 2)}%)",font=("Helvetica",14))
         accuracy_out_label.place(relx=0.5,rely=0.85,anchor=ctk.CENTER)
-        
-        average_time_ = round(numpy.mean(average_time),4)
+        try:
+            average_time_ = round(numpy.mean(average_time),4)
+        except:
+            average_time_ = 0
         average_label_label = ctk.CTkLabel(thing_frame,text="Average",font=("Helvetica",14))
         average_label_label.place(relx=0.7,rely=0.15,anchor=ctk.CENTER)
         min_label_label = ctk.CTkLabel(thing_frame,text="Minimum",font=("Helvetica",14))
         min_label_label.place(relx=0.3,rely=0.15,anchor=ctk.CENTER)
-        average_label = ctk.CTkButton(thing_frame,text=f"{average_time_*1000}\nms",width=75,height=75,font=("Helvetica",14))
+        average_label = ctk.CTkButton(thing_frame,text=f"{round(average_time_*1000,4)}\nms",width=75,height=75,font=("Helvetica",14))
         average_label.place(relx=0.7,rely=0.5,anchor=ctk.CENTER)
-        min_label = ctk.CTkButton(thing_frame,text=f"{min_time_*1000}\nms",width=75,height=75,font=("Helvetica",14))
+        min_label = ctk.CTkButton(thing_frame,text=f"{round(min_time_*1000,4)}\nms",width=75,height=75,font=("Helvetica",14))
         min_label.place(relx=0.3,rely=0.5,anchor=ctk.CENTER)
-        
+
+
+        correct_list = []
+        average_time = []
+        reaction_click = None
+        reaction_start = None
+
+        with open("save.json","r") as f:
+            s = json.load(f)
+        a = s.get("settings",{}).get("autohide",True)
+        if a == True:
+            thing.bind("<FocusOut>", focus_)
+            
+
         thing.mainloop()
     
     create_save()
@@ -286,6 +317,12 @@ def main():
             return "#61B62F"
         if theme == "default":
             return "#ffffff"
+        if theme == "purple":
+            return "#ff00ff"
+        if theme == "red":
+            return "#ff0000"
+        if theme == "blue":
+            return "#004d99"
         if theme == "custom":
             with open("save.json","r") as f:
                 settings = json.load(f)
@@ -297,7 +334,7 @@ def main():
             button2.configure(fg_color="#1c1c1c",hover_color="#1c1c1c")
             button3.configure(fg_color="#1c1c1c",hover_color="#1c1c1c")
             button4.configure(fg_color="#1c1c1c",hover_color="#1c1c1c")
-        elif theme == "green":
+        if theme == "green":
             button1.configure(fg_color="#254B0F",hover_color="#254B0F")
             button2.configure(fg_color="#254B0F",hover_color="#254B0F")
             button3.configure(fg_color="#254B0F",hover_color="#254B0F")
@@ -306,7 +343,34 @@ def main():
             window.configure(fg_color="#0E1F04",hover_color="#254B0F")
             start.configure(fg_color="#4BA516",hover_color="#254B0F")
             settings_.configure(fg_color="#4BA516",hover_color="#254B0F")
-        elif theme == "custom":
+        if theme == "purple":
+            button1.configure(fg_color="#1a001a",hover_color="#1a001a")
+            button2.configure(fg_color="#1a001a",hover_color="#1a001a")
+            button3.configure(fg_color="#1a001a",hover_color="#1a001a")
+            button4.configure(fg_color="#1a001a",hover_color="#1a001a")
+            start.configure(fg_color="#1a001a",hover_color="#4d004d")
+            settings_.configure(fg_color="#1a001a",hover_color="#4d004d")
+            frame.configure(fg_color="#330033")
+            window.configure(fg_color="#1a001a")
+        if theme == "red":
+            button1.configure(fg_color="#1a0000",hover_color="#1a0000")
+            button2.configure(fg_color="#1a0000",hover_color="#1a0000")
+            button3.configure(fg_color="#1a0000",hover_color="#1a0000")
+            button4.configure(fg_color="#1a0000",hover_color="#1a0000")
+            start.configure(fg_color="#1a0000",hover_color="#3d0101")
+            settings_.configure(fg_color="#1a0000",hover_color="#3d0101")
+            frame.configure(fg_color="#330000")
+            window.configure(fg_color="#1a0000")
+        if theme == "blue":
+            button1.configure(fg_color="#00131a",hover_color="#00131a")
+            button2.configure(fg_color="#00131a",hover_color="#00131a")
+            button3.configure(fg_color="#00131a",hover_color="#00131a")
+            button4.configure(fg_color="#00131a",hover_color="#00131a")
+            start.configure(fg_color="#00131a",hover_color="#013245")
+            settings_.configure(fg_color="#00131a",hover_color="#013245")
+            frame.configure(fg_color="#002533")
+            window.configure(fg_color="#00131a")
+        if theme == "custom":
             with open("save.json","r") as f:
                 settings = json.load(f)
             
@@ -531,7 +595,29 @@ def main():
                 button_3.configure(fg_color="#61B62F",hover_color="#61B62F")
                 button_4.configure(fg_color="#254B0F",hover_color="#254B0F")
                 frame_.configure(fg_color="#142C06")
-                root.configure(fg_color="#0E1F04",hover_color="#254B0F")
+                root.configure(fg_color="#0E1F04")
+            if theme__ == "Purple":
+                button_1.configure(fg_color="#1a001a",hover_color="#1a001a")
+                button_2.configure(fg_color="#1a001a",hover_color="#1a001a")
+                button_3.configure(fg_color="#ff00ff",hover_color="#ff00ff")
+                button_4.configure(fg_color="#1a001a",hover_color="#1a001a")
+                frame_.configure(fg_color="#330033")
+                root.configure(fg_color="#1a001a")
+            if theme__ == "Red":
+                button_1.configure(fg_color="#1a0000",hover_color="#1a0000")
+                button_2.configure(fg_color="#1a0000",hover_color="#1a0000")
+                button_3.configure(fg_color="#ff0000",hover_color="#ff0000")
+                button_4.configure(fg_color="#1a0000",hover_color="#1a0000")
+                frame_.configure(fg_color="#330000")
+                root.configure(fg_color="#1a0000")
+            if theme__ == "Blue":
+                button_1.configure(fg_color="#00131a",hover_color="#00131a")
+                button_2.configure(fg_color="#00131a",hover_color="#00131a")
+                button_3.configure(fg_color="#004d99",hover_color="#004d99")
+                button_4.configure(fg_color="#00131a",hover_color="#00131a")
+                frame_.configure(fg_color="#002533")
+                root.configure(fg_color="#00131a")
+                
             window.after(250,update_)
         if not all([hover_,frame_bg_,main_bg_,button_color_]):
             pass
@@ -555,6 +641,9 @@ def main():
             save.place(relx=0.5,rely=0.9,anchor=ctk.CENTER)
             opacity_slider.place(relx=0.5,rely=0.1,anchor=ctk.CENTER)
         def change_theme(choice):
+            settings["settings"]["theme"] = choice
+            with open("save.json","w") as f:
+                json.dump(settings,f)
             print(choice)
             if choice == "Custom":
                 opacity_label.place(relx=0.5,rely=0.05,anchor=ctk.CENTER)
@@ -580,10 +669,8 @@ def main():
                         #json.dump(settings,f)
                 else:
                     return
-            settings["settings"]["theme"] = choice
-            #with open("save.json","w") as f:
-                #json.dump(settings,f)
-        theme_ = ctk.CTkOptionMenu(frame_,values=["Default","Green","Custom"],command=change_theme)
+
+        theme_ = ctk.CTkOptionMenu(frame_,values=["Default","Green","Purple","Red","Blue","Custom"],command=change_theme)
         theme_.place(relx=0.5,rely=0.60,anchor=ctk.CENTER)
         a = settings.get("settings",{}).get("theme","Default")
         version_label = ctk.CTkLabel(frame_,text=f"{version}",font=("Helvetica",12))
@@ -686,6 +773,10 @@ def main():
             mode_ = music_switch.get()
             music_option_change = change_setting(setting="music",mode=mode_)
             mus_ = mode_
+        def hid():
+            mode_ = auto_hide.get()
+            hide_option_change = change_setting(setting="autohide",mode=mode_)
+            ah = mode_
         scaling_option = ctk.CTkSwitch(frame_,onvalue=True,offvalue=False,text="",switch_width=50,switch_height=25,width=50,height=25,command=sca)
         scaling_option.place(relx=0.1,rely=0.2,anchor=ctk.CENTER)
         
@@ -697,6 +788,12 @@ def main():
         
         switch_label = ctk.CTkLabel(frame_,text="SFX",font=("Helvetica",18))
         switch_label.place(relx=0.2,rely=0.3,anchor=ctk.CENTER)
+        
+        auto_hide = ctk.CTkSwitch(frame_,text="",onvalue=True,offvalue=False,switch_width=50,switch_height=25,width=50,height=25,command=hid)
+        auto_hide.place(relx=0.9,rely=0.3,anchor=ctk.CENTER)
+        
+        auto_close_label = ctk.CTkLabel(frame_,text="Auto hide results",font=("Helvetica",18))
+        auto_close_label.place(relx=0.67,rely=0.3,anchor=ctk.CENTER)
     
         check_for_updates_switch = ctk.CTkSwitch(frame_,text="",onvalue=True,offvalue=False,switch_width=50,switch_height=25,command=che,width=50,height=25)
         check_for_updates_switch.place(relx=0.1,rely=0.4,anchor=ctk.CENTER)
@@ -723,6 +820,7 @@ def main():
         so = settings.get("settings",{}).get("sound",True)
         cfu = settings.get("settings",{}).get("check",True)
         mus_ = settings.get("settings",{}).get("music",False)
+        ah = settings.get("settings",{}).get("autohide",True)
         theme_button = ctk.CTkButton(frame_,text="Theme",command=custom_theme)
         theme_button.place(relx=0.5,rely=0.7,anchor=ctk.CENTER)
         with open("save.json","r") as f:
@@ -761,6 +859,8 @@ def main():
             switch.select()
         if mus_ == True:
             music_switch.select()
+        if ah == True:
+            auto_hide.select()
         def quit__():
             try:
                 window.destroy()
@@ -822,6 +922,7 @@ def main():
         global started
         global starting
         global score
+        
         score = 0
         score_label.configure(text=f"{score}/{get_save()}")
         started = True
@@ -873,7 +974,7 @@ def main():
             save()
             restore()
             score_label.configure(text=f"{score}/{get_save()}")
-            show_results()
+            show_results(x=window.winfo_pointerx()-112,y=window.winfo_pointery()-87)
             return
         _time = int(elapsed_time*-1)
         time_.configure(text=(_time))
