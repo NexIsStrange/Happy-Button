@@ -9,6 +9,9 @@
 
 
 
+
+
+
 <h1>Common Issues</h1>
 
 <h3>Zoomed in too much</h3> 
