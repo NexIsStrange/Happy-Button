@@ -7,7 +7,7 @@ import os
 import webbrowser
 from pygame import mixer
 import numpy
-version = 1.6
+version = 1.7
 playing_music = False
 starting = False
 sound_loc = "button.wav"
@@ -49,7 +49,9 @@ def create_save():
 create_save()
 def main():
     def show_results(x,y):
-        
+        with open("save.json","r") as f:
+            settings = json.load(f)
+        theme = settings.get("settings",{}).get("theme","default").lower()
         global correct_list
         global average_time
         global reaction_click
@@ -102,7 +104,34 @@ def main():
         if a == True:
             thing.bind("<FocusOut>", focus_)
             
-
+        if theme == "green":
+            thing_frame.configure(fg_color="#142C06")
+            thing.configure(fg_color="#0E1F04",hover_color="#254B0F")
+            average_label.configure(fg_color="#4BA516",hover_color="#4BA516")
+            min_label.configure(fg_color="#4BA516",hover_color="#4BA516")
+        if theme == "purple":
+            min_label.configure(fg_color="#1a001a",hover_color="#1a001a")
+            average_label.configure(fg_color="#1a001a",hover_color="#1a001a")
+            thing_frame.configure(fg_color="#330033")
+            thing.configure(fg_color="#1a001a")
+        if theme == "red":
+            average_label.configure(fg_color="#1a0000",hover_color="#1a0000")
+            min_label.configure(fg_color="#1a0000",hover_color="#1a0000")
+            thing_frame.configure(fg_color="#330000")
+            thing.configure(fg_color="#1a0000")
+        if theme == "blue":
+            average_label.configure(fg_color="#00131a",hover_color="#00131a")
+            min_label.configure(fg_color="#00131a",hover_color="#00131a")
+            thing_frame.configure(fg_color="#002533")
+            thing.configure(fg_color="#00131a")
+        if theme == "custom":
+            button_c = settings.get("settings",{}).get("custom_theme",{}).get("hover","gray18")
+            frame_c = settings.get("settings",{}).get("custom_theme",{}).get("frame_bg","gray18")
+            average_label.configure(fg_color=button_c,hover_color=button_c)
+            min_label.configure(fg_color=button_c,hover_color=button_c)
+            thing_frame.configure(fg_color=frame_c)
+            thing.configure(fg_color=button_c)
+            
         thing.mainloop()
     
     create_save()
@@ -689,6 +718,8 @@ def main():
         root_.title("Change Keybinds")
         frame__ = ctk.CTkFrame(root_,width=450,height=450)
         frame__.place(relx=0.5,rely=0.5,anchor=ctk.CENTER)
+        with open("save.json","r") as f:
+            settings = json.load(f)
         
         def deferr():
             save_button.configure(text="Save",state="normal")
@@ -734,6 +765,56 @@ def main():
         save_button.place(relx=0.5,rely=0.9,anchor=ctk.CENTER)
         root_.after(10,chje)
         
+        with open("save.json","r") as f:
+            settings = json.load(f)
+        theme = settings.get("settings",{}).get("theme","default").lower()
+        if theme == "green":
+            button_c="#4BA516"
+            frame__.configure(fg_color="#142C06")
+            root_.configure(fg_color="#0E1F04")
+            entry1.configure(fg_color="#4BA516")
+            entry2.configure(fg_color="#4BA516")
+            entry3.configure(fg_color="#4BA516")
+            entry4.configure(fg_color="#4BA516")
+        if theme == "purple":
+            button_c = "#1a001a"
+            save_button.configure(fg_color=button_c,hover_color=button_c)
+            entry1.configure(fg_color=button_c)
+            entry2.configure(fg_color=button_c)
+            entry3.configure(fg_color=button_c)
+            entry4.configure(fg_color=button_c)
+            frame__.configure(fg_color="#330033")
+            root_.configure(fg_color=button_c)
+        if theme == "red":
+            button_c = "#1a0000"
+            button_c = "#1a001a"
+            save_button.configure(fg_color=button_c,hover_color=button_c)
+            entry1.configure(fg_color=button_c)
+            entry2.configure(fg_color=button_c)
+            entry3.configure(fg_color=button_c)
+            entry4.configure(fg_color=button_c)
+            frame__.configure(fg_color="#330000")
+            root_.configure(fg_color=button_c)
+        if theme == "blue":
+            button_c = "#1a0000"
+            save_button.configure(fg_color=button_c,hover_color=button_c)
+            entry1.configure(fg_color=button_c)
+            entry2.configure(fg_color=button_c)
+            entry3.configure(fg_color=button_c)
+            entry4.configure(fg_color=button_c)
+            frame__.configure(fg_color="#002533")
+            root_.configure(fg_color=button_c)
+        if theme == "custom":
+            button_c = settings.get("settings",{}).get("custom_theme",{}).get("hover","gray18")
+            frame_c = settings.get("settings",{}).get("custom_theme",{}).get("frame_bg","gray18")
+            entry1.configure(fg_color=button_c)
+            entry2.configure(fg_color=button_c)
+            entry3.configure(fg_color=button_c)
+            entry4.configure(fg_color=button_c)
+            save_button.configure(fg_color=button_c,hover_color=button_c)
+            frame__.configure(fg_color=frame_c)
+            root_.configure(fg_color=button_c)
+
         root_.mainloop()
         
     def setting():
@@ -868,6 +949,65 @@ def main():
                 root.destroy()
             root.destroy()
             main()
+        with open("save.json","r") as f:
+            settings = json.load(f)
+        theme = settings.get("settings",{}).get("theme","default").lower()
+        if theme == "green":
+            button_c="#4BA516"
+            frame_.configure(fg_color="#142C06")
+            root.configure(fg_color="#0E1F04",hover_color="#254B0F")
+            keybinds.configure(fg_color="#4BA516",hover_color="#4BA516")
+            theme_button.configure(fg_color="#4BA516",hover_color="#4BA516")
+            check_for_updates_switch.configure(progress_color=button_c,fg_color="#0E1F04")
+            scaling_option.configure(progress_color=button_c,fg_color="#0E1F04")
+            switch.configure(progress_color=button_c,fg_color="#0E1F04")
+            auto_hide.configure(progress_color=button_c,fg_color="#0E1F04")
+            music_switch.configure(progress_color=button_c,fg_color="#0E1F04")
+        if theme == "purple":
+            button_c = "#1a001a"
+            keybinds.configure(fg_color="#1a001a",hover_color="#1a001a")
+            check_for_updates_switch.configure(progress_color=button_c,fg_color="#1a001a")
+            scaling_option.configure(progress_color=button_c,fg_color="#1a001a")
+            switch.configure(progress_color=button_c,fg_color="#1a001a")
+            auto_hide.configure(progress_color=button_c,fg_color="#1a001a")
+            music_switch.configure(progress_color=button_c,fg_color="#1a001a")
+            theme_button.configure(fg_color="#1a001a",hover_color="#1a001a")
+            frame_.configure(fg_color="#330033")
+            root.configure(fg_color="#1a001a")
+        if theme == "red":
+            button_c = "#1a0000"
+            keybinds.configure(fg_color="#1a0000",hover_color="#1a0000")
+            theme_button.configure(fg_color="#1a0000",hover_color="#1a0000")
+            check_for_updates_switch.configure(progress_color=button_c,fg_color="#1a0000")
+            scaling_option.configure(progress_color=button_c,fg_color="#1a0000")
+            switch.configure(progress_color=button_c,fg_color="#1a0000")
+            auto_hide.configure(progress_color=button_c,fg_color="#1a0000")
+            music_switch.configure(progress_color=button_c,fg_color="#1a0000")
+            frame_.configure(fg_color="#330000")
+            root.configure(fg_color="#1a0000")
+        if theme == "blue":
+            button_c = "#00131a"
+            keybinds.configure(fg_color="#00131a",hover_color="#00131a")
+            theme_button.configure(fg_color="#00131a",hover_color="#00131a")
+            check_for_updates_switch.configure(progress_color=button_c,fg_color="#00131a")
+            scaling_option.configure(progress_color=button_c,fg_color="#00131a")
+            switch.configure(progress_color=button_c,fg_color="#00131a")
+            auto_hide.configure(progress_color=button_c,fg_color="#00131a")
+            music_switch.configure(progress_color=button_c,fg_color="#00131a")
+            frame_.configure(fg_color="#002533")
+            root.configure(fg_color="#00131a")
+        if theme == "custom":
+            button_c = settings.get("settings",{}).get("custom_theme",{}).get("hover","gray18")
+            frame_c = settings.get("settings",{}).get("custom_theme",{}).get("frame_bg","gray18")
+            keybinds.configure(fg_color=button_c,hover_color=button_c)
+            theme_button.configure(fg_color=button_c,hover_color=button_c)
+            check_for_updates_switch.configure(progress_color=button_c)
+            scaling_option.configure(progress_color=button_c)
+            switch.configure(progress_color=button_c)
+            auto_hide.configure(progress_color=button_c)
+            music_switch.configure(progress_color=button_c)
+            frame_.configure(fg_color=frame_c)
+            root.configure(fg_color=button_c)
         root.protocol("WM_DELETE_WINDOW", quit__)
         root.mainloop()
         
