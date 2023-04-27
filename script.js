@@ -1,23 +1,21 @@
-const owner = "ctih1"; 
-const repo = "Happy-Button"; 
+var listOfButtons = ["default.png", "green.png", "purple.png", "red.png", "blue.png"];
+var index = 1;
 
-fetch(`https://api.github.com/repos/${owner}/${repo}/releases/latest`)
-  .then(response => response.json())
-  .then(data => {
-    const latestTag = data.tag_name;
-    console.log(latestTag)
-    var downloadButton = document.getElementById('download_windows');
-    var downloadPortable = document.getElementById('download_windows_portable')
-    window.onload = function() {
-      downloadButton.setAttribute("onclick",`window.location.href="https://github.com/ctih1/Happy-Button/releases/download/${latestTag}/Happy_Button_Installer.exe"`);
-      downloadPortable.setAttribute("onclick",`window.location.href="https://github.com/ctih1/Happy-Button/releases/download/${latestTag}/Windows_Portable.zip"`);
-    };
-      
-        
-    }
 
-  )
-  .catch(error => {
-    console.error(`Error fetching latest release: ${error}`);
-  });
-  ;
+function updateValue() {
+    var slideShow = document.getElementById("themeImage");
+    var currentValue = listOfButtons[index];
+    var newValue = currentValue.replace(/(\d+)/, function(match, num) {
+        return String(parseInt(num) + 1);
+    });
+    listOfButtons[index] = newValue;
+    index = (index + 1) % listOfButtons.length;
+    themeImage.style.transition = "opacity 0.5s";
+    themeImage.style.opacity = 0;
+    setTimeout(function() {
+        slideShow.setAttribute("src",newValue);
+        themeImage.style.opacity = 1;
+      }, 200);
+}
+
+setInterval(updateValue, 2500);
