@@ -1,3 +1,5 @@
+# I have no idea what I was thinking when coding this.
+
 import customtkinter as ctk
 import random
 import time
@@ -56,7 +58,7 @@ def main():
         global average_time
         global reaction_click
         global reaction_start
-        
+     
         def focus_(n):
             thing.destroy()
 
@@ -158,7 +160,7 @@ def main():
         with open("save.json","r") as f:
             settings = json.load(f)
         opac = settings.get("settings",{}).get("custom_theme",{}).get("opacity",1)
-        window.attributes("-a",float(opac))
+        window.attributes("-a",float(opac)) # I guess it changes the window to a certain opacity, not sure if it works :)
     frame = ctk.CTkFrame(window,width=450,height=200)
     frame.place(relx=0.5,rely=0.5,anchor=ctk.CENTER)        
     def get_check():
@@ -169,7 +171,7 @@ def main():
         if cheforupd != True:
             return
         try:
-            response = requests.get("https://api.github.com/repos/ctih1/Happy-Button/releases/latest")
+            response = requests.get("https://api.github.com/repos/ctih1/Happy-Button/releases/latest") # Shitty api request
             a = response.json()["name"]
             b = a.rsplit(" ",1)
             if float(b[1]) > version:
@@ -177,9 +179,9 @@ def main():
             else:
                 print("Nothing")
         except:
-            print("ratelimited")  
+            print("ratelimited") # Shit
     def download_():
-        webbrowser.open('github.com/ctih1/Happy-Button/releases/latest', new=2)
+        webbrowser.open('github.com/ctih1/Happy-Button/releases/latest', new=2) # idc that it opens Edge instead of the default browser, could not be bothered to fix it.
     download = ctk.CTkButton(frame,text="Updates Available",font=("Helvetica",12),width=90,height=10.0,command=download_)
     
     get_check()
@@ -195,7 +197,7 @@ def main():
         with open("save.json","r") as f:
             save = json.load(f)
         old_score = save.get("score",0)
-        if old_score < score:
+        if old_score < score:  # I guess it checks if the old score is more than the score you just got.
             save["score"] = score
             with open("save.json","w") as f:
                 json.dump(save,f)
@@ -357,7 +359,7 @@ def main():
                 settings = json.load(f)
             a = settings ["settings"]["custom_theme"]["button_color"]
             return a
-    def restore():
+    def restore(): # damn thats alot of code *sigh*, prob could used a more efficent way, but couldn't care less
         if theme == "default":
             button1.configure(fg_color="#1c1c1c",hover_color="#1c1c1c")
             button2.configure(fg_color="#1c1c1c",hover_color="#1c1c1c")
@@ -436,7 +438,7 @@ def main():
         c_button = buttonnum
     def resize(n):
         global old_height
-        global old_width
+        global old_width # 589375th Global Variable
         
         __width__ = window.winfo_width()
         __height__ = window.winfo_height()
@@ -471,43 +473,43 @@ def main():
             pass
         root = ctk.CTk()
         root.title("Settings")
-        root.geometry("500x500")
+        root.geometry("500x500") # Another window, yay
         frame_ = ctk.CTkFrame(root,width=450,height=450)
         frame_.place(relx=0.5,rely=0.5,anchor=ctk.CENTER)
         with open("save.json","r") as f:
             settings = json.load(f)
 
-        def check_is_string(hover,frame,main,button): #CREDITS; https://www.geeksforgeeks.org/check-if-a-given-string-is-a-valid-hexadecimal-color-code-or-not/
-            if hover[0] != "#":
+        def check_is_string(hover,frame,main,button): #*adapted* from https://www.geeksforgeeks.org/check-if-a-given-string-is-a-valid-hexadecimal-color-code-or-not/
+            if hover[0] != "#": # Dont know what it does.
                 return "hover"
-            if frame[0] != "#":
-                return "frame"
-            if main[0] != "#":
+            if frame[0] != "#": # Dont know what it does.
+                return "frame" 
+            if main[0] != "#": # Dont know what it does.
                 return "main"
-            if button[0] != "#":
+            if button[0] != "#": # Dont know what it does.
                 return "button"
-            if (not(len(hover) == 4 or len(hover) == 7)):
+            if (not(len(hover) == 4 or len(hover) == 7)): # Dont know what it does.
                 return "hover"
-            if (not(len(frame) == 4 or len(frame) == 7)):
+            if (not(len(frame) == 4 or len(frame) == 7)): # Dont know what it does.
                 return "frame"
-            if (not(len(main) == 4 or len(main) == 7)):
+            if (not(len(main) == 4 or len(main) == 7)): # Dont know what it does.
                 return "main"
-            if (not(len(button) == 4 or len(button) == 7)):
+            if (not(len(button) == 4 or len(button) == 7)): # Dont know what it does.
                 return "button"
             for i in range(1, len(hover)):
-                if (not((hover[i] >= '0' and hover[i] <= '9') or (hover[i] >= 'a' and hover[i] <= 'f') or (hover[i] >= 'A' or hover[i] <= 'F'))):
+                if (not((hover[i] >= '0' and hover[i] <= '9') or (hover[i] >= 'a' and hover[i] <= 'f') or (hover[i] >= 'A' or hover[i] <= 'F'))): # Dont know what it does.
                     return "hover"
             for i in range(1, len(frame)):
-                if (not((frame[i] >= '0' and frame[i] <= '9') or (frame[i] >= 'a' and frame[i] <= 'f') or (frame[i] >= 'A' or frame[i] <= 'F'))):
+                if (not((frame[i] >= '0' and frame[i] <= '9') or (frame[i] >= 'a' and frame[i] <= 'f') or (frame[i] >= 'A' or frame[i] <= 'F'))): # Dont know what it does.
                     return "frame"
             for i in range(1, len(main)):
-                if (not((main[i] >= '0' and main[i] <= '9') or (main[i] >= 'a' and main[i] <= 'f') or (main[i] >= 'A' or main[i] <= 'F'))):
+                if (not((main[i] >= '0' and main[i] <= '9') or (main[i] >= 'a' and main[i] <= 'f') or (main[i] >= 'A' or main[i] <= 'F'))): # Dont know what it does.
                     return "main"
             for i in range(1, len(button)):
-                if (not((button[i] >= '0' and button[i] <= '9') or (button[i] >= 'a' and button[i] <= 'f') or (button[i] >= 'A' or button[i] <= 'F'))):
+                if (not((button[i] >= '0' and button[i] <= '9') or (button[i] >= 'a' and button[i] <= 'f') or (button[i] >= 'A' or button[i] <= 'F'))): # Dont know what it does.
                     return "button"
-            return True
-        def save_custom():
+            return True # Dont know what it does.
+        def save_custom(): # I don't understand what I did in this. Only the giant rat in the sky knows.
             if "custom_theme" not in settings["settings"]:
                 settings["settings"]["custom_theme"] = {}
 
@@ -531,18 +533,18 @@ def main():
                 
         def check_for_updates(mode):
             if mode == "automatic":
-                cheforupd = settings.get("settings",{}).get("check",True)
+                cheforupd = settings.get("settings",{}).get("check",True) # A better name could have been nice.
                 if cheforupd != True:
                     return
             try:
                 check_for_updates_.configure(state="disabled",text="Checking")
-                response = requests.get("https://api.github.com/repos/ctih1/Happy-Button/releases/latest")
+                response = requests.get("https://api.github.com/repos/ctih1/Happy-Button/releases/latest") # Didn't we already do this?
                 a = response.json()["name"]
                 b = a.rsplit(" ",1)
                 
                 if float(b[1]) > version:
                     check_for_updates_.configure(state="normal",text="Updates available.")
-                    webbrowser.open('github.com/ctih1/Happy-Button/releases/latest', new=2)
+                    webbrowser.open('github.com/ctih1/Happy-Button/releases/latest', new=2)  # "Didn't we already do this?" - Yes. I don't know why it isnt a function.
                 else:
                     check_for_updates_.configure(state="disabled",text="No Updates available.")
             except:
@@ -564,7 +566,7 @@ def main():
             settings["settings"]["custom_theme"]["opacity"] = value
             with open("save.json","w") as f:
                 json.dump(settings,f)     
-        button_1 = ctk.CTkButton(frame_,width=100,height=100,text="",corner_radius=120)
+        button_1 = ctk.CTkButton(frame_,width=100,height=100,text="",corner_radius=120) # I ain't explaining allat
         button_1.place(relx=0.13,rely=0.3,anchor=ctk.CENTER)
         button_2 = ctk.CTkButton(frame_,width=100,height=100,text="",corner_radius=120)
         button_2.place(relx=0.38,rely=0.3,anchor=ctk.CENTER)
@@ -647,8 +649,8 @@ def main():
                 frame_.configure(fg_color="#002533")
                 root.configure(fg_color="#00131a")
                 
-            window.after(250,update_)
-        if not all([hover_,frame_bg_,main_bg_,button_color_]):
+            window.after(250,update_) # Ran out of comments.
+        if not all([hover_,frame_bg_,main_bg_,button_color_]): # Something with lists and trying not to make it crash. 
             pass
         else:
             hover.insert(0,hover_)
@@ -692,7 +694,7 @@ def main():
                 main_bg.place(relx=12)
                 button_color.place(relx=12)
             if choice == "Custom":
-                if len(hover.get()) > 1 and len(frame_bg.get()) > 1 and len(main_bg.get()) > 1 and len(button_color.get()) > 1:
+                if len(hover.get()) > 1 and len(frame_bg.get()) > 1 and len(main_bg.get()) > 1 and len(button_color.get()) > 1: # I have a headdache.
                     settings["settings"]["theme"] = choice
                     #with open("save.json","w") as f:
                         #json.dump(settings,f)
@@ -712,7 +714,7 @@ def main():
         root.after(100,update_)
         root.mainloop()
         
-    def change_keybind():
+    def change_keybind(): # Why did I do this
         root_ = ctk.CTk()
         root_.geometry("500x500")
         root_.title("Change Keybinds")
@@ -767,7 +769,7 @@ def main():
         
         with open("save.json","r") as f:
             settings = json.load(f)
-        theme = settings.get("settings",{}).get("theme","default").lower()
+        theme = settings.get("settings",{}).get("theme","default").lower() # ""Didn't we already do this?"" - Yes
         if theme == "green":
             button_c="#4BA516"
             frame__.configure(fg_color="#142C06")
@@ -1133,3 +1135,6 @@ if __name__ == "__main__":
     main()
 else:
     print(__name__)
+
+    
+# Probably could have gotten it to 250 lines if I actually knew what I was doing, I did not.
