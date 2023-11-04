@@ -3,6 +3,7 @@
 ## [Online Beta](https://replit.com/@CTIH/Happy-Button-Online-Beta)
 <h2>A game made with customtkinter</h2>
 
+## W.I.P: Currently rewriting. Check out the dev branch for the updated code. (This text was updated on 11th November, 2023) 
 
 
 <img src="https://user-images.githubusercontent.com/78687256/230709646-714222ec-6a75-4092-9b15-e68e32c72827.gif" width="640" height="360"/>
