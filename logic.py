@@ -14,6 +14,7 @@ correct = 0
 max_score = save.get_score()
 
 def start():
+    l.log(type="DEBUG",message="Importing 'gui'")
     gui = importlib.import_module("gui") 
     global started 
     global start_time
@@ -42,12 +43,15 @@ def button_click(m):
     """
     'm' is the variable used to tell what button is being pressed (1-4)
     """
+    l.log(type="DEBUG",message=f"Button {m} clicked")
     gui = importlib.import_module("gui")
     global correct
     global score
     global start_time
     
-    if not started: return
+    if not started: 
+        l.log(type="INFO",message="Game has not started!")
+        return
     else:
         global pressed, correct
         global score
@@ -55,25 +59,25 @@ def button_click(m):
         pressed+=1
         if m!=current_button:
             sound.wrong()
-            l.log(type="DEUBG",message="Subtracting 0.2s from user's time.")
             start_time = start_time - 0.5
         else:
             sound.correct()
             score+=1
             correct+=1
-            l.log(type="DEUBG",message="Adding 0.2s from user's time.")
             start_time += 0.2
         gui.reset_buttons()
         gui.update_score(score=score)
         random_button()
         
 def random_button():
+    l.log(type="DEBUG",message="Generating a random button...")
     gui = importlib.import_module("gui")
     global current_button
     number: int = random.randint(1,4)
     while number==current_button:
         number: int = random.randint(1,4)
     current_button = number
+    l.log(type="DEBUG",message=f"Highlighting button {current_button}")
     gui.highlight_button(index=current_button)
     
 def clock():
@@ -85,6 +89,7 @@ def clock():
     limit = 15
     elapsed_time = time.time() - start_time - limit
     if elapsed_time >= 0:
+        l.log(type="DEBUG",message="Time ran out")
         gui.reset_buttons()
         save.save(score=score)
         gui.restore_buttons()

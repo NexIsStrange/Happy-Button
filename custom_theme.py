@@ -4,6 +4,8 @@ import settings
 import save
 import sound
 import hex_color
+import gui
+import logger as l
 
 buttons = []
 i=0
@@ -11,6 +13,7 @@ i=0
 
 denied = ["frame_color","button_color","root_color","hover_color"]
 def GUI():
+    l.log(type="INFO",message="Loading custom_theme GUI")
     global opacity_slider, opacity_label, theme_option, hover_color_entry, frame_color_entry,root_color_entry, button_color_entry,save_button
     global root,frame
     
@@ -50,9 +53,11 @@ def GUI():
     root.mainloop()
    
 def restore_save():
-     save_button.configure(state="normal",text="Save")
+    save_button.configure(state="normal",text="Save")
     
 def save_theme():
+    l.log(type="DEBUG",message="Saving theme...")
+    gui.refresh_theme()
     save_button.configure(state="disabled",text="Saved!")
     if theme_option.get().lower() != "custom":
         save.theme(theme=theme_option.get().lower())
@@ -65,6 +70,7 @@ def save_theme():
         )
         print(check)
         if check not in denied:
+            l.log(type="DEUBG",message="All hex-codes are valid.")
             save.theme(theme="custom",
                     button_color=button_color_entry.get(),
                     frame_color=frame_color_entry.get(),
@@ -73,9 +79,11 @@ def save_theme():
                     opacity=opacity_slider.get()
             )
         else:
+            l.log(type="DEBUG",message=f"Invalid hex-code: {check}")
             save_button.configure(text=f"Invalid: {check}")
     root.after(1000,restore_save)
 def change_theme(element):
+    l.log(type="DEBUG",message=f"Changed theme to {element}")
     global i
     i = 0
     update_buttons()

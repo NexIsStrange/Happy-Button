@@ -1,2 +1,9 @@
 def log(type: str, message: str):
-    print(f"{type} - {message}")
+    with open("log.txt","a") as f:
+        f.write(f"{type} - {message}\n")
+    print(f"")
+    
+def save_info(info: str):
+    with open("log.txt","a") as f:
+        f.write(f"{info}\n")
+    print(info)

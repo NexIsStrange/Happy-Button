@@ -2,6 +2,7 @@ import json
 import get_info
 import keybind
 import custom_theme
+import logger as l
 
 def get_setting(setting: str, default = False):
     with open("save.json","r") as f:
@@ -9,6 +10,7 @@ def get_setting(setting: str, default = False):
     return settings_file.get("settings",{}).get(setting, default)
 
 def change_setting(setting:str, value):
+    l.log(f"Changing '{setting}' to '{value}'")
     with open("save.json","r") as f:
         setting_file = json.load(f)
     if "settings" not in setting_file:
@@ -28,6 +30,7 @@ def get_custom_theme():
     return settings_file.get("settings",{}).get("custom_theme")
 
 def gui():
+    l.log(type="DEBUG",message="Loading settings GUI")
     import customtkinter as ctk
     root = ctk.CTk()
     root.title("Settings")

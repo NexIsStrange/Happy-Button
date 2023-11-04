@@ -1,6 +1,8 @@
 import settings
 import get_info
 
+#WIP NOT FINISHED
+
 def check_for_updates(mode):
     if mode=="manual":
         try:

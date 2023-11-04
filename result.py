@@ -1,7 +1,6 @@
 import customtkinter as ctk
 import theme
 
-
 def show(x,y, percent: float, min_time: float, average_time: float, clicks: int, correct_clicks: int): 
         """
         average_time = round(average_time*1000,4)

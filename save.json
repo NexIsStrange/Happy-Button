@@ -8,9 +8,9 @@
       "hover_color": "#c2ddeb",
       "opacity": 0.8334999999999999
     },
-    "theme": "custom",
+    "theme": "purple",
     "sound": true,
-    "scaling": true,
+    "scaling": false,
     "1": "a",
     "2": "b",
     "3": "c",

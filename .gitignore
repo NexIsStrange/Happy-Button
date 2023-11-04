@@ -49,6 +49,7 @@ coverage.xml
 # Dev stuff
 save.json
 raw.py
+log.txt
 
 # Sphinx documentation
 docs/_build/

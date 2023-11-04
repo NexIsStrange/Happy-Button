@@ -1,11 +1,12 @@
 import customtkinter as ctk
-import time
 import result
 import theme
 import sound
 import importlib
 import logger as l
 import settings
+import sys
+import time
 
 buttons = []
 current_button = None
@@ -13,6 +14,7 @@ start_time = None
 scaling_setting = True
 
 def GUI():
+    l.log(type="INFO",message="Starting GUI")
     global logic
     logic = importlib.import_module("logic")
     print(theme.get_colors())
@@ -38,14 +40,18 @@ def GUI():
         window.after(1000,toggle_resize)
         
     sound.init()
+    window.protocol("WM_DELETE_WINDOW",on_closing)
     window.mainloop()
 
 def reset_buttons():
+    l.log(type="DEBUG",message="Resettings buttons...")
     for i in buttons:
         i.configure(fg_color=theme.get_colors()["button_color"],hover_color=theme.get_colors()["button_color"])
+    
 
     
 def create_elements():
+    l.log(type="DEBUG",message="Creating elements...")
     global start
     global score_label
     global settings_button
@@ -85,6 +91,8 @@ def create_elements():
     score_label = ctk.CTkLabel(frame,text=f"0/0",font=("Helvetica",20))
     score_label.place(relx=0.03,rely=0.03)
     
+    l.log(type="DEBUG",message="Done creating elements")
+    
     
 def highlight_button(index: int):
     buttons[index-1].configure(fg_color=theme.get_colors()["hover_color"],hover_color=theme.get_colors()["hover_color"])
@@ -116,6 +124,27 @@ def start_game():
     logic.start()
     logic.random_button()
 
+def refresh_theme_():
+    for button in buttons:
+        button.configure(fg_color=theme.get_colors()["button_color"],hover_color=theme.get_colors()["button_color"])
+    window.configure(fg_color=theme.get_colors()["root_color"])
+    frame.configure(fg_color=theme.get_colors()["frame_color"])
+    settings_button.configure(fg_color=theme.get_colors()["button_color"],hover_color=theme.get_colors()["button_color"])
+    start.configure(fg_color=theme.get_colors()["button_color"],hover_color=theme.get_colors()["button_color"])
+    l.log(type="DEBUG",message="Refreshed theme succesfully")
+
+def refresh_theme():
+    l.log(type="DEBUG",message="Refreshing theme in 200ms...")
+    window.after(200,refresh_theme_)
+    
+def on_closing():
+    l.log(type="DEBUG",message="Exiting with 'on_closing()'")
+    for i in range(100)[::-1]:
+        window.attributes("-alpha",i/100)
+        time.sleep(0.005)
+    sys.exit(0)
+
+    
 if __name__ == "__main__":
     l.log(type="WARNING",message="It looks like you are running the 'gui.py' script as main, this is not adviced, and might lead to unexpected behaviour")
     input = input("Do you want to proceed? (Y/N)")

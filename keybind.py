@@ -1,6 +1,9 @@
 import settings
 import customtkinter as ctk
+import logger as l
+
 def GUI():
+    l.log(type="DEBUG", message="Loading keybind GUI")
     global frame
     global root
     
@@ -35,6 +38,7 @@ def create_items():
     root.after(10,limit_char_count)
     
 def save():
+    l.log(type="DEBUG",message="Saving keybinds...")
     disable_button()
     settings.change_setting("1",entry1.get())
     settings.change_setting("2",entry2.get())
