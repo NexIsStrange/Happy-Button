@@ -177,10 +177,10 @@ def main():
                 if len(hover.get()) > 1 and len(frame_bg.get()) > 1 and len(main_bg.get()) > 1 and len(button_color.get()) > 1:
                     settings["settings"]["theme"] = "Custom"
                     with open("save.json","w") as f:
-                        json.dump(settings,f)
+                        json.dump(settings,f,indent=2)
             settings["settings"]["theme"] = theme_.get()
             with open("save.json","w") as f:
-                json.dump(settings,f)
+                (settings,f)
                 
         def check_for_updates(mode):
             if mode == "automatic":
@@ -216,7 +216,7 @@ def main():
             root.attributes("-a",value)
             settings["settings"]["custom_theme"]["opacity"] = value
             with open("save.json","w") as f:
-                json.dump(settings,f)     
+                json.dump(settings,f,indent=2)     
         button_1 = ctk.CTkButton(frame_,width=100,height=100,text="",corner_radius=120) # I ain't explaining allat
         button_1.place(relx=0.13,rely=0.3,anchor=ctk.CENTER)
         button_2 = ctk.CTkButton(frame_,width=100,height=100,text="",corner_radius=120)

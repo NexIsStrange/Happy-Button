@@ -7,6 +7,7 @@ import importlib
 import logger as l
 import settings
 
+buttons = []
 current_button = None
 start_time = None
 scaling_setting = True
@@ -20,12 +21,14 @@ def GUI():
 
     global window
     window = ctk.CTk()
+    window.configure(fg_color=theme.get_colors()["root_color"])
     window.geometry("500x250")
     window.title("Happy Button")
     window.minsize(500,250)
     
     global frame
     frame = ctk.CTkFrame(window,width=450,height=200)
+    frame.configure(fg_color=theme.get_colors()["frame_color"])
     frame.place(relx=0.5,rely=0.5,anchor=ctk.CENTER)
     create_elements()
     def toggle_resize():
@@ -38,10 +41,8 @@ def GUI():
     window.mainloop()
 
 def reset_buttons():
-    button1.configure(fg_color=theme.get_colors()["button_color"],hover_color=theme.get_colors()["button_color"])
-    button2.configure(fg_color=theme.get_colors()["button_color"],hover_color=theme.get_colors()["button_color"])
-    button3.configure(fg_color=theme.get_colors()["button_color"],hover_color=theme.get_colors()["button_color"])
-    button4.configure(fg_color=theme.get_colors()["button_color"],hover_color=theme.get_colors()["button_color"])
+    for i in buttons:
+        i.configure(fg_color=theme.get_colors()["button_color"],hover_color=theme.get_colors()["button_color"])
 
     
 def create_elements():
@@ -49,14 +50,13 @@ def create_elements():
     global score_label
     global settings_button
     global time_label
-    global button1, button2, button3, button4
     global start
     global warning_label
     
     warning_label = ctk.CTkLabel(frame,font=("Helvetica",11),text_color="#FF0000",text="")
     warning_label.place(relx=0.75,rely=0.1,anchor=ctk.CENTER)
     
-    start = ctk.CTkButton(frame,width=100,height=25,text="Start",font=("Helvetica",18.75),command=start_game)
+    start = ctk.CTkButton(frame,width=100,height=25,text="Start",fg_color=theme.get_colors()["button_color"],hover_color=theme.get_colors()["hover_color"],font=("Helvetica",18.75),command=start_game)
     start.place(relx=0.5,rely=0.125,anchor=ctk.CENTER)
 
     button1 = ctk.CTkButton(frame,width=100,height=100,text="",corner_radius=50,fg_color=theme.get_colors()["button_color"],hover_color=theme.get_colors()["button_color"],command=lambda m=1:logic.button_click(m))
@@ -71,7 +71,12 @@ def create_elements():
     button4 = ctk.CTkButton(frame,width=100,height=100,text="",corner_radius=50,fg_color=theme.get_colors()["button_color"],hover_color=theme.get_colors()["button_color"],command=lambda m=4:logic.button_click(m))
     button4.place(relx=0.87,rely=0.5,anchor=ctk.CENTER)
     
-    settings_button = ctk.CTkButton(frame,width=100,height=25,text="Settings",font=("Helvetica",18.75),command=settings.gui)
+    buttons.append(button1)
+    buttons.append(button2)
+    buttons.append(button3)
+    buttons.append(button4)
+    
+    settings_button = ctk.CTkButton(frame,width=100,height=25,fg_color=theme.get_colors()["button_color"],hover_color=theme.get_colors()["hover_color"],text="Settings",font=("Helvetica",18.75),command=settings.gui)
     settings_button.place(relx=0.5,rely=0.9,anchor=ctk.CENTER)
     
     time_label = ctk.CTkLabel(frame,text="Time",font=("Helvetica",20))
@@ -82,14 +87,7 @@ def create_elements():
     
     
 def highlight_button(index: int):
-    if index == 1:
-        button1.configure(fg_color=theme.get_colors()["hover_color"],hover_color=theme.get_colors()["hover_color"])
-    if index == 2:
-        button2.configure(fg_color=theme.get_colors()["hover_color"],hover_color=theme.get_colors()["hover_color"])
-    if index == 3:
-        button3.configure(fg_color=theme.get_colors()["hover_color"],hover_color=theme.get_colors()["hover_color"])
-    if index == 4:
-        button4.configure(fg_color=theme.get_colors()["hover_color"],hover_color=theme.get_colors()["hover_color"])
+    buttons[index-1].configure(fg_color=theme.get_colors()["hover_color"],hover_color=theme.get_colors()["hover_color"])
         
 def move_buttons_away():
     start.place(relx=12,rely=12)

@@ -22,5 +22,27 @@ def save(score: int):
     if old_score < score: 
         save["score"] = score
         with open("save.json","w") as f:
-            json.dump(save,f)
-            
+            json.dump(save,f,indent=2)
+def create_empty(save):
+        if "settings" not in save:
+            save["settings"] = {}
+        if "custom_theme" not in save["settings"]:
+            save["settings"]["custom_theme"] = {}
+        with open("save.json","w") as f:
+            json.dump(save,f,indent=2)
+     
+def theme(theme:str, button_color: str=None, frame_color: str=None, root_color: str=None, hover_color: str=None, opacity:float=1.0):
+    with open("save.json","r") as f:
+        save = json.load(f)
+    
+    if theme=="custom":
+        save["settings"]["custom_theme"]["button_color"] = button_color
+        save["settings"]["custom_theme"]["frame_color"] = frame_color
+        save["settings"]["custom_theme"]["root_color"] = root_color
+        save["settings"]["custom_theme"]["hover_color"] = hover_color
+        save["settings"]["custom_theme"]["opacity"] = opacity
+    else:
+        save["settings"]["theme"] = theme
+    with open("save.json","w") as f:
+        json.dump(save,f,indent=2)
+    

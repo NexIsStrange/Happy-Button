@@ -75,7 +75,7 @@ def random_button():
         number: int = random.randint(1,4)
     current_button = number
     gui.highlight_button(index=current_button)
-
+    
 def clock():
     gui = importlib.import_module("gui")
     global start_time
@@ -88,6 +88,7 @@ def clock():
         gui.reset_buttons()
         save.save(score=score)
         gui.restore_buttons()
+        started = False
         try:
             calc_percentage = round((correct/pressed)*100,4)
         except ZeroDivisionError:

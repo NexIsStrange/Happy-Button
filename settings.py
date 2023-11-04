@@ -1,6 +1,7 @@
 import json
 import get_info
 import keybind
+import custom_theme
 
 def get_setting(setting: str, default = False):
     with open("save.json","r") as f:
@@ -15,8 +16,17 @@ def change_setting(setting:str, value):
     setting_file["settings"][setting] = value
     
     with open("save.json","w") as f:
-        json.dump(setting_file,f)
-        
+        json.dump(setting_file,f,indent=2)
+
+def get_custom_theme():
+    """
+    Returns dict
+    Example: {"hover": "#30566E", "frame_bg": "#30566E", "main_bg": "#30566E", "button_color": "#30566E", "opacity": "1.0"}
+    """
+    with open("save.json","r") as f:
+        settings_file = json.load(f)
+    return settings_file.get("settings",{}).get("custom_theme")
+
 def gui():
     import customtkinter as ctk
     root = ctk.CTk()
@@ -43,11 +53,11 @@ def gui():
     
     def mus():
         mode_ = music_switch.get()
-        change_setting(setting="music",mode=mode_)
+        change_setting(setting="music",value=mode_)
         mus_ = mode_
     def hid():
         mode_ = auto_hide.get()
-        change_setting(setting="autohide",mode=mode_)
+        change_setting(setting="autohide",value=mode_)
         ah = mode_
     scaling_option = ctk.CTkSwitch(frame_,onvalue=True,offvalue=False,text="",switch_width=50,switch_height=25,width=50,height=25,command=sca)
     scaling_option.place(relx=0.1,rely=0.2,anchor=ctk.CENTER)
@@ -96,7 +106,7 @@ def gui():
     cfu = get_setting("check")
     mus_ = get_setting("music")
     ah = get_setting("auto_hide")
-    theme_button = ctk.CTkButton(frame_,text="Theme",command=None)
+    theme_button = ctk.CTkButton(frame_,text="Theme",command=custom_theme.GUI)
     theme_button.place(relx=0.5,rely=0.7,anchor=ctk.CENTER)
 
     version_label = ctk.CTkLabel(frame_,text=f"Application: v{float(get_info.application_ver())}({get_info.type()}), Theme: v{float(get_info.theme_ver())}, Save: v{float(get_info.save_ver())} ",font=("Helvetica",12))

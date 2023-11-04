@@ -1,1 +1,22 @@
-{"score": 27, "settings": {"custom_theme": {"hover": "#30566E", "frame_bg": "#30566E", "main_bg": "#30566E", "button_color": "#30566E", "opacity": "1.0"}, "theme": "purple", "sound": true, "scaling": true, "1": "a", "2": "b", "3": "c", "4": "d", "check": true}}
+{
+  "score": 55,
+  "settings": {
+    "custom_theme": {
+      "button_color": "#ffdb7e",
+      "frame_color": "#db7eff",
+      "root_color": "#856de5",
+      "hover_color": "#c2ddeb",
+      "opacity": 0.8334999999999999
+    },
+    "theme": "custom",
+    "sound": true,
+    "scaling": true,
+    "1": "a",
+    "2": "b",
+    "3": "c",
+    "4": "d",
+    "check": false,
+    "music": false,
+    "autohide": false
+  }
+}
