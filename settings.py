@@ -112,7 +112,7 @@ def gui():
     theme_button = ctk.CTkButton(frame_,text="Theme",command=custom_theme.GUI)
     theme_button.place(relx=0.5,rely=0.7,anchor=ctk.CENTER)
 
-    version_label = ctk.CTkLabel(frame_,text=f"Application: v{float(get_info.application_ver())}({get_info.type()}), Theme: v{float(get_info.theme_ver())}, Save: v{float(get_info.save_ver())} ",font=("Helvetica",12))
+    version_label = ctk.CTkLabel(frame_,text=f"Application: v{float(get_info.application_ver())}({get_info.release_type()}), Theme: v{float(get_info.theme_ver())}, Save: v{float(get_info.save_ver())} ",font=("Helvetica",12))
     version_label.place(relx=0.4,rely=0.95,anchor=ctk.CENTER)
     
     if sc == True: scaling_option.select()
