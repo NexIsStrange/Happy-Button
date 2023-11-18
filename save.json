@@ -18,6 +18,6 @@
     "check": false,
     "music": false,
     "autohide": false,
-    "logging_level": 2
+    "logging_level": 0
   }
 }

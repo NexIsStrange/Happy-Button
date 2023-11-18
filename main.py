@@ -4,7 +4,7 @@ import sys
 import gui as g
 import platform
 import os
-
+import rpc
 #TODO:
 fil = []
 exclude = set(["__pycache__",".git"])
@@ -14,6 +14,8 @@ with open("log.txt","w") as f:
     f.write("")
     
 if __name__ == "__main__":
+    rpc.init()
+    rpc.update(state="Happy Button", details="Launching")
     for (root, dirs,files) in os.walk('.',topdown=True):
         [dirs.remove(d) for d in list(dirs) if d in exclude]
         fil.append(f"{root} {files}")

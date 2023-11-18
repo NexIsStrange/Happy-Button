@@ -4,6 +4,7 @@ import time
 import sound
 import save
 import logger as l
+import rpc
 
 current_button = None
 start_time = None
@@ -67,6 +68,8 @@ def button_click(m):
             start_time += 0.2
         gui.reset_buttons()
         gui.update_score(score=score)
+        rpc.update(details="Playing Happy Button",state=f"{score}x")
+
         random_button()
         
 def random_button():
@@ -91,17 +94,21 @@ def clock():
     limit = 15
     elapsed_time = time.time() - start_time - limit
     if elapsed_time >= 0:
+        c_score = score
+        c_pressed = pressed
+        c_correct = correct
+        try:
+            calc_percentage = round((correct/pressed)*100,4)
+        except ZeroDivisionError:
+            calc_percentage = 0.0
+        
         l.log(type="DEBUG",message="Time ran out")
         gui.reset_buttons()
         save.save(score=score)
         gui.restore_buttons()
         started = False
-        try:
-            calc_percentage = round((correct/pressed)*100,4)
-        except ZeroDivisionError:
-            calc_percentage = 0.0
-        gui.show_result(score=score,max_score=max_score,clicks=pressed,correct_clicks=correct,percentage=calc_percentage,min_time=0,average_time=0)
         end()
+        gui.show_result(score=c_score,max_score=max_score,clicks=c_pressed,correct_clicks=c_correct,percentage=calc_percentage,min_time=0,average_time=0)
         return
     gui.update_time(elapsed_time)
     gui.window.after(100,clock)

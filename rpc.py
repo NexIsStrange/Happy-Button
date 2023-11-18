@@ -2,6 +2,7 @@ from pypresence import Presence
 import time
 import logger as l
 turned_on = True
+
 def init():
     global turned_on
     global time_started
