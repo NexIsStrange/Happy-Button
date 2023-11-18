@@ -5,6 +5,7 @@ import sound
 import save
 import logger as l
 import rpc
+import numpy
 
 current_button = None
 start_time = None
@@ -12,6 +13,8 @@ started = False
 score = 0
 pressed = 0
 correct = 0
+times = []
+last_press_time = None
 max_score = save.get_score()
 
 def start():
@@ -25,6 +28,9 @@ def start():
     clock()
     
 def end():
+    """
+    Resets variables ´correct´, ´pressed´, ´current_button´,´score´, ´started´, ´start_time´, ´times´, ´last_press_time´
+    """
     gui = importlib.import_module("gui")
     gui.restore_buttons()
     global started
@@ -33,12 +39,16 @@ def end():
     global pressed
     global correct
     global current_button
+    global last_press_time
+    global times
     correct = 0
     pressed = 0
     current_button = None
     score = 0
     started = False
     start_time = None
+    times = []
+    last_press_time = None
     
 def button_click(m):
     """
@@ -56,11 +66,13 @@ def button_click(m):
     else:
         global pressed, correct
         global score
-        global start_time
+        global start_time, times, last_press_time
+        if last_press_time != None: times.append(time.time()-last_press_time)
+        last_press_time = time.time()
         pressed+=1
         if m!=current_button:
             sound.wrong()
-            start_time = start_time - 0.5
+            start_time = start_time - 1
         else:
             sound.correct()
             score+=1
@@ -97,6 +109,7 @@ def clock():
         c_score = score
         c_pressed = pressed
         c_correct = correct
+        c_times = times
         try:
             calc_percentage = round((correct/pressed)*100,4)
         except ZeroDivisionError:
@@ -108,7 +121,18 @@ def clock():
         gui.restore_buttons()
         started = False
         end()
-        gui.show_result(score=c_score,max_score=max_score,clicks=c_pressed,correct_clicks=c_correct,percentage=calc_percentage,min_time=0,average_time=0)
+        try: min_time = round((min(c_times)*1000),4)
+        except Exception as e: l.log(type="ERROR",message=f"Error while setting ´min_time´. {e}") 
+        try: average_time = round((numpy.mean(c_times)*1000),4)
+        except Exception as e: l.log(type="ERROR",message=f"Error while setting ´average_time´. {e}") 
+
+        gui.show_result(score=c_score,
+                        max_score=max_score,
+                        clicks=c_pressed,
+                        correct_clicks=c_correct,
+                        percentage=calc_percentage,
+                        min_time=min_time,
+                        average_time=average_time)
         return
     gui.update_time(elapsed_time)
     gui.window.after(100,clock)
