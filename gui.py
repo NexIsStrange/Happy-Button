@@ -13,9 +13,9 @@ current_button = None
 start_time = None
 
 def GUI():
-    l.log(type="INFO",message="Starting GUI")
     global logic
     logic = importlib.import_module("logic")
+    l.log(type="INFO",message="Starting GUI")
     print(theme.get_colors())
     global max_score
     max_score = 0
@@ -93,36 +93,47 @@ def create_elements():
     
     
 def highlight_button(index: int):
+    if l.level <= 0:
+        l.log(type="DEBUG",message=f"Highlighting index {index}")
     buttons[index-1].configure(fg_color=theme.get_colors()["hover_color"],hover_color=theme.get_colors()["hover_color"])
         
 def move_buttons_away():
+    if l.level <= 0:
+        l.log(type="DEBUG",message=f"Moving buttons away")
     start.place(relx=12,rely=12)
     settings_button.place(relx=12,rely=12)
  
 def update_score(score):
+    if l.level <= 0:
+        l.log(type="DEBUG",message=f"Updating score text")
     score_label.configure(text=f"{score}/{max_score}")
  
 def restore_buttons():
+    if l.level <= 0:
+        l.log(type="DEBUG",message=f"Moved buttons back")
     start.place(rely=0.1,relx=0.5,anchor=ctk.CENTER)
     settings_button.place(relx=0.5,rely=0.9,anchor=ctk.CENTER)
     start.configure(text="Retry")
 
 def show_result(score: int, max_score: int, clicks: int,correct_clicks: int, percentage: float, min_time: float, average_time: float):
     update_score(score=score)
+    if l.level <= 0:
+        l.log(type="DEBUG",message=f"Showing results")
     result.show(x=window.winfo_pointerx()-112,y=window.winfo_pointery()-87,clicks=clicks,correct_clicks=correct_clicks,percent=percentage, min_time=min_time,average_time=average_time)
 
 def update_time(elapsed_time):
     _time = round(float(elapsed_time*-1),1)
     time_label.configure(text=(_time))
 
-def update_score(score):
-    score_label.configure(text=f"{score}/{max_score}")
-
 def start_game():
+    if l.level <= 0:
+        l.log(type="DEBUG",message=f"GUI: Starting game")
     logic.start()
     logic.random_button()
 
 def refresh_theme_():
+    if l.level <= 0:
+        l.log(type="DEBUG",message=f"Refreshed theme")
     for button in buttons:
         button.configure(fg_color=theme.get_colors()["button_color"],hover_color=theme.get_colors()["button_color"])
     window.configure(fg_color=theme.get_colors()["root_color"])

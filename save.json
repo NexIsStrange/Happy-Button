@@ -17,6 +17,7 @@
     "4": "d",
     "check": false,
     "music": false,
-    "autohide": false
+    "autohide": false,
+    "logging_level": 2
   }
 }

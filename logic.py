@@ -70,12 +70,16 @@ def button_click(m):
         random_button()
         
 def random_button():
+    if l.level <= 0:
+        l.log(type="DEBUG",message=f"Generating random button...")
     gui = importlib.import_module("gui")
     global current_button
     number: int = random.randint(1,4)
     while number==current_button:
         number: int = random.randint(1,4)
     current_button = number
+    if l.level <= 0:
+        l.log(type="DEBUG",message=f"Generated a ranom number {current_button}")
     gui.highlight_button(index=current_button)
     
 def clock():
