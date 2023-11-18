@@ -11,7 +11,6 @@ import time
 buttons = []
 current_button = None
 start_time = None
-scaling_setting = True
 
 def GUI():
     l.log(type="INFO",message="Starting GUI")
@@ -33,22 +32,21 @@ def GUI():
     frame.configure(fg_color=theme.get_colors()["frame_color"])
     frame.place(relx=0.5,rely=0.5,anchor=ctk.CENTER)
     create_elements()
+    
     def toggle_resize():
-        import scaling
-        window.bind("<Configure>",scaling.resize)
-    if scaling_setting:
-        window.after(1000,toggle_resize)
-        
+        if settings.get_setting("scaling") == True:
+            import scaling
+            window.bind("<Configure>",scaling.resize)
+
+    window.after(1000,toggle_resize)
     sound.init()
     window.protocol("WM_DELETE_WINDOW",on_closing)
+    bind_buttons()
     window.mainloop()
 
 def reset_buttons():
-    l.log(type="DEBUG",message="Resettings buttons...")
     for i in buttons:
         i.configure(fg_color=theme.get_colors()["button_color"],hover_color=theme.get_colors()["button_color"])
-    
-
     
 def create_elements():
     l.log(type="DEBUG",message="Creating elements...")
@@ -144,7 +142,15 @@ def on_closing():
         time.sleep(0.005)
     sys.exit(0)
 
-    
+def bind_buttons():
+    for i in range(4):
+        l.log(type="DEBUG",message=f"Binding standard button {i+1} to {i+1}...")
+        window.bind(f"{i+1}",lambda event,m=i+1: logic.button_click(m))
+    for i in range(4):
+        keybind = settings.get_setting(f"{i+1}")
+        l.log(type="DEBUG",message=f"Binding custom button {i+1} to {keybind}...")
+        window.bind(f"{keybind}", lambda event, m=i+1: logic.button_click(m))
+        
 if __name__ == "__main__":
     l.log(type="WARNING",message="It looks like you are running the 'gui.py' script as main, this is not adviced, and might lead to unexpected behaviour")
     input = input("Do you want to proceed? (Y/N)")
@@ -152,4 +158,3 @@ if __name__ == "__main__":
         quit()
     else:
         GUI()
-print(__name__)

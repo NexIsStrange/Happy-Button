@@ -43,14 +43,14 @@ def button_click(m):
     """
     'm' is the variable used to tell what button is being pressed (1-4)
     """
-    l.log(type="DEBUG",message=f"Button {m} clicked")
     gui = importlib.import_module("gui")
     global correct
     global score
     global start_time
-    
+    if l.level <= 0:
+        l.log(type="DEBUG",message=f"Detected click {m}")
     if not started: 
-        l.log(type="INFO",message="Game has not started!")
+        l.log(type="INFO",message="Game has not started! Ignoring button")
         return
     else:
         global pressed, correct
@@ -70,14 +70,12 @@ def button_click(m):
         random_button()
         
 def random_button():
-    l.log(type="DEBUG",message="Generating a random button...")
     gui = importlib.import_module("gui")
     global current_button
     number: int = random.randint(1,4)
     while number==current_button:
         number: int = random.randint(1,4)
     current_button = number
-    l.log(type="DEBUG",message=f"Highlighting button {current_button}")
     gui.highlight_button(index=current_button)
     
 def clock():

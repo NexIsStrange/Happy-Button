@@ -17,7 +17,7 @@ def get_score():
     return save.get("score",0)
 
 def save(score: int):
-    l.log(f"Saving score: {score}")
+    l.log(type="DEBUG", message=f"Saving score: {score}")
     create_save()
     with open("save.json","r") as f:
         save = json.load(f)
