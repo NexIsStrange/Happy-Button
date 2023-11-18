@@ -68,7 +68,6 @@ def save_theme():
                 "root_color":root_color_entry.get(),
                 "hover_color":hover_color_entry.get()}
         )
-        print(check)
         if check not in denied:
             l.log(type="DEUBG",message="All hex-codes are valid.")
             save.theme(theme="custom",

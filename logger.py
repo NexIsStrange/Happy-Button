@@ -1,5 +1,4 @@
-import settings
-level = settings.get_setting("logging_level",2)
+level = 2
 
 def log(type: str, message: str):
     with open("log.txt","a") as f:

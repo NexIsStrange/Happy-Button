@@ -50,6 +50,9 @@ coverage.xml
 save.json
 raw.py
 log.txt
+output/
+save.old.json
+save.backup.json
 
 # Sphinx documentation
 docs/_build/

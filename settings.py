@@ -2,29 +2,34 @@ import json
 import get_info
 import keybind
 import custom_theme
+from repair import repair
+import backup
 import logger as l
 
 def get_setting(setting: str, default = False):
+    repair()
     with open("save.json","r") as f:
         settings_file = json.load(f)
     return settings_file.get("settings",{}).get(setting, default)
 
 def change_setting(setting:str, value):
-    l.log(f"Changing '{setting}' to '{value}'")
+    l.log(type="INFO", message=f"Changing '{setting}' to '{value}'")
+    repair()
     with open("save.json","r") as f:
-        setting_file = json.load(f)
-    if "settings" not in setting_file:
-        setting_file["settings"] = {}
-    setting_file["settings"][setting] = value
-    
+        settings_file = json.load(f)
+    if "settings" not in settings_file:
+        settings_file["settings"] = {}
+    settings_file["settings"][setting] = value
+    backup.backup()
     with open("save.json","w") as f:
-        json.dump(setting_file,f,indent=2)
+        json.dump(settings_file,f,indent=2)
 
 def get_custom_theme():
     """
     Returns dict
     Example: {"hover": "#30566E", "frame_bg": "#30566E", "main_bg": "#30566E", "button_color": "#30566E", "opacity": "1.0"}
     """
+    repair()
     with open("save.json","r") as f:
         settings_file = json.load(f)
     return settings_file.get("settings",{}).get("custom_theme")

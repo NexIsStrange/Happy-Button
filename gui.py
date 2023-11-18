@@ -76,7 +76,6 @@ def create_elements():
     button4.place(relx=0.87,rely=0.5,anchor=ctk.CENTER)
     
     buttons.append(button1)
-    buttons.append(button2)
     buttons.append(button3)
     buttons.append(button4)
     
