@@ -1,4 +1,9 @@
-customtkinter==5.2.1
-numpy==1.26.2
-pygame==2.5.2
+CTkMessagebox==2.5
+CTkMessagebox==2.5
+darkdetect==0.8.0
+packaging==23.2
+Pillow==10.1.0
+Pillow==10.1.0
 pypresence==4.3.0
+Requests==2.31.0
+typing_extensions==4.8.0
