@@ -7,6 +7,7 @@ import logger as l
 import settings
 import sys
 import time
+import update
 
 buttons = []
 current_button = None
@@ -42,6 +43,8 @@ def GUI():
     sound.init()
     window.protocol("WM_DELETE_WINDOW",on_closing)
     bind_buttons()
+    if settings.get_setting("check") == True:
+        update.check_for_updates()
     window.mainloop()
 
 def reset_buttons():

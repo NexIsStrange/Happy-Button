@@ -1,4 +1,4 @@
-data = {"application_version":2,
+data = {"application_version":0.0,
          "theme_version":1,
          "save_version":1,
          "publish_type":"development"}

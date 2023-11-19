@@ -44,9 +44,9 @@ def create_empty(save):
             
 def theme(theme:str, button_color: str=None, frame_color: str=None, root_color: str=None, hover_color: str=None, opacity:float=1.0):
     repair()
+    l.log(type="DEBUG",message="Saving theme...")
     with open("save.json","r") as f:
         save = json.load(f)
-    
     if theme=="custom":
         l.log(type="DEBUG",message="Saving custom theme...")
         save["settings"]["custom_theme"]["button_color"] = button_color
@@ -54,9 +54,8 @@ def theme(theme:str, button_color: str=None, frame_color: str=None, root_color: 
         save["settings"]["custom_theme"]["root_color"] = root_color
         save["settings"]["custom_theme"]["hover_color"] = hover_color
         save["settings"]["custom_theme"]["opacity"] = opacity
-    else:
-        l.log(type="DEBUG",message="Saving theme...")
-        save["settings"]["theme"] = theme
+    save["settings"]["theme"] = theme
+    
     backup.backup()
     with open("save.json","w") as f:
         json.dump(save,f,indent=2)

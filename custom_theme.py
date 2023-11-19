@@ -86,7 +86,6 @@ def change_theme(element):
     global i
     i = 0
     update_buttons()
-    print(element)
     if element.lower() == "custom":
         opacity_label.place(relx=0.5,rely=0.05,anchor=ctk.CENTER)
         opacity_slider.place(relx=0.5,rely=0.1,anchor=ctk.CENTER)
@@ -94,6 +93,20 @@ def change_theme(element):
         frame_color_entry.place(relx=0.7,rely=0.7,anchor=ctk.CENTER)
         root_color_entry.place(relx=0.3,rely=0.8,anchor=ctk.CENTER)
         button_color_entry.place(relx=0.7,rely=0.8,anchor=ctk.CENTER)
+        
+        # Clearing the old values
+        hover_color_entry.delete(0,ctk.END)
+        frame_color_entry.delete(0,ctk.END)
+        root_color_entry.delete(0,ctk.END)
+        button_color_entry.delete(0,ctk.END)
+        # Setting coloros for each input
+        
+        custom_values = theme.get_colors(specify="custom")
+        opacity_slider.set(custom_values["opacity"])
+        hover_color_entry.insert(0,custom_values["hover_color"])
+        frame_color_entry.insert(0,custom_values["frame_color"])
+        root_color_entry.insert(0,custom_values["root_color"])
+        button_color_entry.insert(0,custom_values["button_color"])
     else:
         opacity_label.place(relx=12,rely=12,anchor=ctk.CENTER)
         opacity_slider.place(relx=12,rely=12,anchor=ctk.CENTER)

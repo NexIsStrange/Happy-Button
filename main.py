@@ -14,13 +14,24 @@ import rpc
 #TODO:
 ctk.set_appearance_mode("Dark")
 
+def start():
+    l.log(type="INFO",message="Game Started!")
+    try:
+        l.log(type="DEBUG", message="Initializing RPC")
+        rpc.init()
+        rpc.update(state="Happy Button", details="Launching")
+    except Exception as e:
+        l.log(type="ERROR",message=f"Failed initializing RPC. {e}")
+    g.GUI()
+
+
+
 with open("log.txt","w") as f:
     f.write("")
     
 if __name__ == "__main__":
-    rpc.init()
-    rpc.update(state="Happy Button", details="Launching")
-    l.log(type="INFO",message="Game Started!")
-    g.GUI()
+    start()
+    
+    
 else:
     print(__name__)

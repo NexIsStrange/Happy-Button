@@ -1,6 +1,7 @@
 import settings
 import customtkinter as ctk
 import logger as l
+import gui
 
 def GUI():
     l.log(type="DEBUG", message="Loading keybind GUI")
@@ -44,6 +45,7 @@ def save():
     settings.change_setting("2",entry2.get())
     settings.change_setting("3",entry3.get())
     settings.change_setting("4",entry4.get())
+    gui.bind_buttons()
     root.after(1000,enable_button)
     
 def limit_char_count():

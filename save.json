@@ -1,15 +1,14 @@
 {
+  "score": 24,
   "settings": {
-    "custom_theme": {
-      "button_color": "#8b9cf6",
-      "frame_color": "#9cf5f9",
-      "root_color": "#abb1fd",
-      "hover_color": "#ecf69a",
-      "opacity": 0.75
-    },
-    "theme": "green",
     "sound": true,
-    "music": true
-  },
-  "score": 6
+    "check": true,
+    "scaling": false,
+    "music": true,
+    "autohide": true,
+    "1": "q",
+    "2": "w",
+    "3": "i",
+    "4": "o"
+  }
 }

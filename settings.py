@@ -5,9 +5,9 @@ import custom_theme
 from repair import repair
 import backup
 import logger as l
-
+from CTkMessagebox import CTkMessagebox
+import update
 def get_setting(setting: str, default = False):
-    repair()
     with open("save.json","r") as f:
         settings_file = json.load(f)
     return settings_file.get("settings",{}).get(setting, default)
@@ -34,7 +34,12 @@ def get_custom_theme():
         settings_file = json.load(f)
     return settings_file.get("settings",{}).get("custom_theme")
 
+def check_for_updates__(event=None):
+    event = None
+    update.check_for_updates()
+
 def gui():
+    repair()
     l.log(type="DEBUG",message="Loading settings GUI")
     import customtkinter as ctk
     root = ctk.CTk()
@@ -42,10 +47,23 @@ def gui():
     root.geometry("500x500")
     frame_ = ctk.CTkFrame(root,width=450,height=450)
     frame_.place(relx=0.5,rely=0.5,anchor=ctk.CENTER)
-    check_for_updates_ = ctk.CTkButton(frame_,text="Check For Updates",command=None)
+    check_for_updates_ = ctk.CTkButton(frame_,text="Check For Updates",command=check_for_updates__)
     def sca():
-        mode_ = scaling_option.get()
-        change_setting(setting="scaling",value=mode_)
+        msg = CTkMessagebox(title="Warning Message!", message="Restart is required for this setting to apply.",icon="warning", option_1="Apply", option_2="Cancel")
+        if msg.get()=="Apply":
+            mode_ = scaling_option.get()
+            change_setting(setting="scaling",value=mode_)
+            confirm = CTkMessagebox(title="Restart", message="Do you want to restart now?",icon="question", option_1="Yes", option_2="No")
+            if confirm.get() == "Yes":
+                import os, sys
+                python = sys.executable
+                os.execl(python,python,* sys.argv)
+        else:
+            if scaling_option.get() == 1:
+                scaling_option.deselect()
+            else:
+                scaling_option.select()
+
     def sou():
         mode_ = switch.get()
         change_setting(setting="sound",value=mode_)
@@ -113,7 +131,7 @@ def gui():
     so = get_setting("sound")
     cfu = get_setting("check")
     mus_ = get_setting("music")
-    ah = get_setting("auto_hide")
+    ah = get_setting("autohide")
     theme_button = ctk.CTkButton(frame_,text="Theme",command=custom_theme.GUI)
     theme_button.place(relx=0.5,rely=0.7,anchor=ctk.CENTER)
 
