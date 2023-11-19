@@ -6,6 +6,7 @@ import save
 import logger as l
 import rpc
 import numpy
+import settings
 
 current_button = None
 start_time = None
@@ -16,7 +17,7 @@ correct = 0
 times = []
 last_press_time = None
 max_score = save.get_score()
-
+click_sounds = settings.get_setting("sound",False)
 def start():
     l.log(type="DEBUG",message="Importing 'gui'")
     gui = importlib.import_module("gui") 
@@ -71,10 +72,12 @@ def button_click(m):
         last_press_time = time.time()
         pressed+=1
         if m!=current_button:
-            sound.wrong()
+            if click_sounds:
+                sound.wrong()
             start_time = start_time - 1
         else:
-            sound.correct()
+            if click_sounds:
+                sound.correct()
             score+=1
             correct+=1
             start_time += 0.2

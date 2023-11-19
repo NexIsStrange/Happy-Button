@@ -1,0 +1,141 @@
+{
+ "version": "auto-py-to-exe-configuration_v1",
+ "pyinstallerOptions": [
+  {
+   "optionDest": "noconfirm",
+   "value": true
+  },
+  {
+   "optionDest": "filenames",
+   "value": "C:/Users/s4hype/Downloads/Happy-Button/Happy-Button/main.py"
+  },
+  {
+   "optionDest": "onefile",
+   "value": true
+  },
+  {
+   "optionDest": "console",
+   "value": false
+  },
+  {
+   "optionDest": "icon_file",
+   "value": "C:/Users/s4hype/Downloads/Happy-Button/Happy-Button/assets/logo.ico"
+  },
+  {
+   "optionDest": "clean_build",
+   "value": false
+  },
+  {
+   "optionDest": "loglevel",
+   "value": "DEBUG"
+  },
+  {
+   "optionDest": "debug",
+   "value": "all"
+  },
+  {
+   "optionDest": "strip",
+   "value": false
+  },
+  {
+   "optionDest": "noupx",
+   "value": false
+  },
+  {
+   "optionDest": "disable_windowed_traceback",
+   "value": false
+  },
+  {
+   "optionDest": "uac_admin",
+   "value": false
+  },
+  {
+   "optionDest": "uac_uiaccess",
+   "value": false
+  },
+  {
+   "optionDest": "argv_emulation",
+   "value": false
+  },
+  {
+   "optionDest": "bootloader_ignore_signals",
+   "value": false
+  },
+  {
+   "optionDest": "datas",
+   "value": "C:/Users/s4hype/Downloads/Happy-Button/Happy-Button/backup.py;."
+  },
+  {
+   "optionDest": "datas",
+   "value": "C:/Users/s4hype/Downloads/Happy-Button/Happy-Button/custom_theme.py;."
+  },
+  {
+   "optionDest": "datas",
+   "value": "C:/Users/s4hype/Downloads/Happy-Button/Happy-Button/get_info.py;."
+  },
+  {
+   "optionDest": "datas",
+   "value": "C:/Users/s4hype/Downloads/Happy-Button/Happy-Button/gui.py;."
+  },
+  {
+   "optionDest": "datas",
+   "value": "C:/Users/s4hype/Downloads/Happy-Button/Happy-Button/hex_color.py;."
+  },
+  {
+   "optionDest": "datas",
+   "value": "C:/Users/s4hype/Downloads/Happy-Button/Happy-Button/keybind.py;."
+  },
+  {
+   "optionDest": "datas",
+   "value": "C:/Users/s4hype/Downloads/Happy-Button/Happy-Button/logger.py;."
+  },
+  {
+   "optionDest": "datas",
+   "value": "C:/Users/s4hype/Downloads/Happy-Button/Happy-Button/logic.py;."
+  },
+  {
+   "optionDest": "datas",
+   "value": "C:/Users/s4hype/Downloads/Happy-Button/Happy-Button/repair.py;."
+  },
+  {
+   "optionDest": "datas",
+   "value": "C:/Users/s4hype/Downloads/Happy-Button/Happy-Button/result.py;."
+  },
+  {
+   "optionDest": "datas",
+   "value": "C:/Users/s4hype/Downloads/Happy-Button/Happy-Button/rpc.py;."
+  },
+  {
+   "optionDest": "datas",
+   "value": "C:/Users/s4hype/Downloads/Happy-Button/Happy-Button/save.py;."
+  },
+  {
+   "optionDest": "datas",
+   "value": "C:/Users/s4hype/Downloads/Happy-Button/Happy-Button/scaling.py;."
+  },
+  {
+   "optionDest": "datas",
+   "value": "C:/Users/s4hype/Downloads/Happy-Button/Happy-Button/settings.py;."
+  },
+  {
+   "optionDest": "datas",
+   "value": "C:/Users/s4hype/Downloads/Happy-Button/Happy-Button/sound.py;."
+  },
+  {
+   "optionDest": "datas",
+   "value": "C:/Users/s4hype/Downloads/Happy-Button/Happy-Button/theme.py;."
+  },
+  {
+   "optionDest": "datas",
+   "value": "C:/Users/s4hype/Downloads/Happy-Button/Happy-Button/update.py;."
+  },
+  {
+   "optionDest": "datas",
+   "value": "C:/Users/s4hype/AppData/Local/Programs/Python/Python311/Lib/site-packages/customtkinter;customtkinter/"
+  }
+ ],
+ "nonPyinstallerOptions": {
+  "increaseRecursionLimit": true,
+  "manualArguments": ""
+ }
+}

@@ -8,13 +8,18 @@ import settings
 import sys
 import time
 import update
-
+import pathlib
+import os
+if getattr(sys, 'frozen', False):
+    import pyi_splash
 buttons = []
 current_button = None
 start_time = None
 
 def GUI():
     global logic
+    if getattr(sys, 'frozen', False):
+        pyi_splash.update_text("UI Loading: 0/3")
     logic = importlib.import_module("logic")
     l.log(type="INFO",message="Starting GUI")
     print(theme.get_colors())
@@ -27,13 +32,22 @@ def GUI():
     window.geometry("500x250")
     window.title("Happy Button")
     window.minsize(500,250)
-    
+    if os.path.isfile(fr"{pathlib.Path.cwd()}\assets\logo.ico") == False:
+        logo_path = fr"{pathlib.Path.cwd()}\_internal\assets\logo.ico"
+    try:
+        window.iconbitmap(logo_path)
+    except Exception as e:
+        l.log(type="ERROR",message=f"Failed to set app image. {e}")
+    if getattr(sys, 'frozen', False):
+        pyi_splash.update_text("UI Loading: 1/3")
     global frame
     frame = ctk.CTkFrame(window,width=450,height=200)
     frame.configure(fg_color=theme.get_colors()["frame_color"])
     frame.place(relx=0.5,rely=0.5,anchor=ctk.CENTER)
     create_elements()
-    
+    if getattr(sys, 'frozen', False):
+        pyi_splash.update_text("UI Loading: 2/3")
+
     def toggle_resize():
         if settings.get_setting("scaling") == True:
             import scaling
@@ -45,6 +59,10 @@ def GUI():
     bind_buttons()
     if settings.get_setting("check") == True:
         update.check_for_updates()
+    if getattr(sys, 'frozen', False):
+        pyi_splash.update_text("UI Loading: 3/3")
+    if getattr(sys, 'frozen', False):
+        pyi_splash.close()
     window.mainloop()
 
 def reset_buttons():
