@@ -1,4 +1,4 @@
-level = 2
+level = 0
 
 def log(type: str, message: str):
     with open("log.txt","a") as f:

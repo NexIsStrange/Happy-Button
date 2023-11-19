@@ -7,5 +7,5 @@ def backup():
     repair()
     with open("save.json","r") as f:
         data = json.load(f)
-    with open("save.data.backup","w") as b:
+    with open("save.backup.json","w") as b:
         json.dump(data,b,indent=2)

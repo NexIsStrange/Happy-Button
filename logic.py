@@ -59,7 +59,7 @@ def button_click(m):
     global score
     global start_time
     if l.level <= 0:
-        l.log(type="DEBUG",message=f"Detected click {m}")
+        l.log(type="DEBUG",message=f"Detected click {m}|{current_button}")
     if not started: 
         l.log(type="INFO",message="Game has not started! Ignoring button")
         return
@@ -80,21 +80,16 @@ def button_click(m):
             start_time += 0.2
         gui.reset_buttons()
         gui.update_score(score=score)
-        rpc.update(details="Playing Happy Button",state=f"{score}x")
-
         random_button()
+        rpc.update(details="Playing Happy Button",state=f"{score}x")
         
 def random_button():
-    if l.level <= 0:
-        l.log(type="DEBUG",message=f"Generating random button...")
     gui = importlib.import_module("gui")
     global current_button
     number: int = random.randint(1,4)
     while number==current_button:
         number: int = random.randint(1,4)
     current_button = number
-    if l.level <= 0:
-        l.log(type="DEBUG",message=f"Generated a ranom number {current_button}")
     gui.highlight_button(index=current_button)
     
 def clock():
@@ -122,9 +117,13 @@ def clock():
         started = False
         end()
         try: min_time = round((min(c_times)*1000),4)
-        except Exception as e: l.log(type="ERROR",message=f"Error while setting ´min_time´. {e}") 
+        except Exception as e: 
+            l.log(type="ERROR",message=f"Error while setting ´min_time´, setting it as None. {e}") 
+            min_time = None
         try: average_time = round((numpy.mean(c_times)*1000),4)
-        except Exception as e: l.log(type="ERROR",message=f"Error while setting ´average_time´. {e}") 
+        except Exception as e: 
+            average_time = None
+            l.log(type="ERROR",message=f"Error while setting ´average_time´, setting it as None. {e}") 
 
         gui.show_result(score=c_score,
                         max_score=max_score,

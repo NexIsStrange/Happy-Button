@@ -76,6 +76,7 @@ def create_elements():
     button4.place(relx=0.87,rely=0.5,anchor=ctk.CENTER)
     
     buttons.append(button1)
+    buttons.append(button2)
     buttons.append(button3)
     buttons.append(button4)
     
@@ -92,8 +93,6 @@ def create_elements():
     
     
 def highlight_button(index: int):
-    if l.level <= 0:
-        l.log(type="DEBUG",message=f"Highlighting index {index}")
     buttons[index-1].configure(fg_color=theme.get_colors()["hover_color"],hover_color=theme.get_colors()["hover_color"])
         
 def move_buttons_away():
@@ -103,8 +102,6 @@ def move_buttons_away():
     settings_button.place(relx=12,rely=12)
  
 def update_score(score):
-    if l.level <= 0:
-        l.log(type="DEBUG",message=f"Updating score text")
     score_label.configure(text=f"{score}/{max_score}")
  
 def restore_buttons():
