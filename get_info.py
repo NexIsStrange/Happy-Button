@@ -1,7 +1,7 @@
-data = {{"application_version":2,
+data = {"application_version":2,
          "theme_version":1,
          "save_version":1,
-         "publish_type":"development"}}
+         "publish_type":"development"}
     
 def application_ver():
     return float(data["application_version"])
